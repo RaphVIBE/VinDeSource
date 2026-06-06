@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vin de Source — Une sélection entre amis</title>
+<meta name="description" content="Une petite sélection de vins choisis avec soin, à partager entre amis et en famille. Commande simple, à la caisse." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* Warm parchment / ink palette (OKLCH, tinted neutrals) */
+    --paper:      oklch(0.975 0.012 75);
+    --paper-deep: oklch(0.945 0.016 72);
+    --ink:        oklch(0.265 0.018 40);
+    --ink-soft:   oklch(0.45 0.02 45);
+    --line:       oklch(0.87 0.018 70);
+    --garnet:     oklch(0.42 0.13 24);
+    --garnet-deep:oklch(0.34 0.12 24);
+    --gold:       oklch(0.62 0.09 75);
+    --white-rose: oklch(0.93 0.03 60);
+
+    --maxw: 1080px;
+    --r: 4px;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .display { font-family: "Fraunces", Georgia, serif; font-weight: 500; letter-spacing: -0.01em; }
+  a { color: var(--garnet); }
+  img { max-width: 100%; }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+
+  /* ---- Header ---- */
+  header.site {
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+    position: sticky; top: 0; z-index: 20;
+  }
+  header.site .wrap {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding-top: 18px; padding-bottom: 18px; gap: 16px; flex-wrap: wrap;
+  }
+  .brand { font-family: "Fraunces", serif; font-size: 1.35rem; font-weight: 600; }
+  .brand small { display:block; font-family:"Inter",sans-serif; font-weight:400; font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color: var(--ink-soft); margin-top: 2px; }
+  nav.site a { color: var(--ink-soft); text-decoration: none; margin-left: 22px; font-size: .95rem; }
+  nav.site a:hover { color: var(--garnet); }
+
+  /* ---- Hero ---- */
+  .hero { padding: 84px 0 64px; border-bottom: 1px solid var(--line); }
+  .hero .eyebrow { text-transform: uppercase; letter-spacing: .22em; font-size: .75rem; color: var(--gold); margin: 0 0 18px; }
+  .hero h1 { font-size: clamp(2.6rem, 6vw, 4.4rem); line-height: 1.04; margin: 0 0 24px; max-width: 14ch; }
+  .hero p { font-size: 1.18rem; color: var(--ink-soft); max-width: 60ch; margin: 0 0 32px; }
+  .btn {
+    display: inline-block; background: var(--garnet); color: var(--paper);
+    text-decoration: none; padding: 13px 26px; border-radius: var(--r);
+    font-weight: 500; font-size: 1rem; border: none; cursor: pointer;
+    transition: background .25s cubic-bezier(.22,1,.36,1), transform .25s cubic-bezier(.22,1,.36,1);
+  }
+  .btn:hover { background: var(--garnet-deep); transform: translateY(-1px); }
+  .btn.ghost { background: transparent; color: var(--garnet); border: 1px solid var(--garnet); }
+  .btn.ghost:hover { background: var(--garnet); color: var(--paper); }
+
+  .note-philanthropy {
+    margin-top: 30px; padding: 16px 20px; background: var(--paper-deep);
+    border: 1px solid var(--line); border-radius: var(--r);
+    font-size: .98rem; color: var(--ink-soft); max-width: 58ch;
+  }
+  .note-philanthropy strong { color: var(--ink); }
+
+  /* ---- Section heads ---- */
+  .section { padding: 72px 0; }
+  .section-head { margin-bottom: 48px; }
+  .section-head .eyebrow { text-transform: uppercase; letter-spacing: .2em; font-size: .73rem; color: var(--gold); margin: 0 0 10px; }
+  .section-head h2 { font-size: clamp(1.9rem, 4vw, 2.7rem); margin: 0; }
+
+  /* ---- Wine list (editorial rows, not card grid) ---- */
+  .wine {
+    display: grid; grid-template-columns: 1fr auto; gap: 8px 40px;
+    padding: 38px 0; border-top: 1px solid var(--line);
+    align-items: start;
+  }
+  .wine:last-child { border-bottom: 1px solid var(--line); }
+  .wine .meta { grid-column: 1; }
+  .wine .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+  .tag {
+    font-size: .72rem; letter-spacing: .08em; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 100px; border: 1px solid var(--line);
+    color: var(--ink-soft); background: var(--paper-deep);
+  }
+  .tag.red    { color: var(--garnet); border-color: var(--garnet); }
+  .tag.white  { color: var(--gold); border-color: var(--gold); }
+  .tag.rose   { color: oklch(0.55 0.11 18); border-color: oklch(0.62 0.1 18); }
+  .tag.alert  { color: var(--paper); background: var(--garnet); border-color: var(--garnet); }
+  .wine h3 { font-size: 1.7rem; margin: 0 0 4px; }
+  .wine .sub { color: var(--ink-soft); font-size: .98rem; margin: 0 0 16px; }
+  .wine .desc { max-width: 64ch; margin: 0 0 14px; }
+  .wine .specs { font-size: .9rem; color: var(--ink-soft); margin: 0; }
+  .wine .specs b { color: var(--ink); font-weight: 500; }
+  .wine .pairing { font-style: italic; color: var(--ink-soft); margin: 10px 0 0; max-width: 64ch; }
+
+  .wine .price-col { grid-column: 2; grid-row: 1; text-align: right; min-width: 150px; }
+  .wine .price { font-family: "Fraunces", serif; font-size: 1.9rem; color: var(--ink); }
+  .wine .price .per { display: block; font-family: "Inter", sans-serif; font-size: .82rem; color: var(--ink-soft); margin-top: 2px; }
+
+  /* ---- Order form ---- */
+  #commander { background: var(--paper-deep); border-top: 1px solid var(--line); }
+  .order-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: start; }
+  .order-intro p { color: var(--ink-soft); max-width: 46ch; }
+  form .row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+  form label { font-size: .9rem; font-weight: 500; }
+  form input[type=text], form input[type=email], form textarea {
+    font-family: inherit; font-size: 1rem; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--r);
+    padding: 11px 13px;
+  }
+  form input:focus, form textarea:focus { outline: 2px solid var(--garnet); outline-offset: 1px; border-color: var(--garnet); }
+  textarea { resize: vertical; min-height: 80px; }
+
+  .qty-list { border: 1px solid var(--line); border-radius: var(--r); background: var(--paper); overflow: hidden; margin-bottom: 20px; }
+  .qty-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  .qty-row:last-child { border-bottom: none; }
+  .qty-row .name { font-size: .95rem; }
+  .qty-row .name span { display:block; color: var(--ink-soft); font-size: .82rem; }
+  .stepper { display: flex; align-items: center; gap: 0; }
+  .stepper button {
+    width: 32px; height: 32px; border: 1px solid var(--line); background: var(--paper-deep);
+    color: var(--ink); font-size: 1.1rem; cursor: pointer; line-height: 1;
+  }
+  .stepper button:first-child { border-radius: var(--r) 0 0 var(--r); }
+  .stepper button:last-child  { border-radius: 0 var(--r) var(--r) 0; }
+  .stepper input { width: 44px; height: 32px; text-align: center; border: 1px solid var(--line); border-left: 0; border-right: 0; font-family: inherit; font-size: 1rem; }
+  .total-bar { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0 22px; font-size: 1.05rem; }
+  .total-bar .amount { font-family: "Fraunces", serif; font-size: 1.7rem; }
+
+  #order-status { margin-top: 14px; font-size: .95rem; }
+  #order-status.ok  { color: var(--garnet-deep); }
+  #order-status.err { color: oklch(0.5 0.16 28); }
+
+  /* ---- Footer ---- */
+  footer.site { padding: 48px 0; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: .9rem; }
+  footer.site .wrap { display:flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+  @media (max-width: 800px) {
+    .order-grid { grid-template-columns: 1fr; gap: 36px; }
+    .wine { grid-template-columns: 1fr; }
+    .wine .price-col { grid-column: 1; grid-row: auto; text-align: left; margin-bottom: 6px; }
+    nav.site a:first-child { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <div class="brand">Vin de Source<small>Sélection entre amis</small></div>
+    <nav class="site">
+      <a href="#vins">Les vins</a>
+      <a href="#commander">Commander</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">De retour pour l'été</p>
+    <h1>Une petite sélection, choisie avec soin.</h1>
+    <p>Des vins que nous aimons, partagés entre amis et en famille. Commande simple, à la caisse, livrée près de chez vous.</p>
+    <a href="#vins" class="btn">Découvrir la sélection</a>
+    <a href="#commander" class="btn ghost" style="margin-left:10px;">Passer commande</a>
+    <div class="note-philanthropy">
+      <strong>Vin de Source</strong> revient pour agrémenter vos tables d'été, tout en participant à une œuvre philanthropique. Boire bien, et faire un peu de bien.
+    </div>
+  </div>
+</section>
+
+<section class="section" id="vins">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">La cave</p>
+      <h2>Cinq vins, du quotidien aux grandes occasions</h2>
+    </div>
+
+    <!-- 1 -->
+    <article class="wine">
+      <div class="meta">
+        <div class="tags"><span class="tag red">Rouge</span><span class="tag">Fitou</span></div>
+        <h3>Vin de Source</h3>
+        <p class="sub">Fitou · Carignan, Grenache</p>
+        <p class="desc">Notes fruitées et de pierre à fusil, signées par notre terroir de schistes et de calcaire. Le compagnon idéal de vos plats du quotidien.</p>
+        <p class="specs"><b>Garde&nbsp;:</b> jusqu'à 5 ans &nbsp;·&nbsp; <b>Caisse&nbsp;:</b> 6 bouteilles</p>
+        <p class="pairing">Facile à associer à vos plats de tous les jours.</p>
+      </div>
+      <div class="price-col"><div class="price">50&nbsp;€<span class="per">la caisse de 6</span></div></div>
+    </article>
+
+    <!-- 2 -->
+    <article class="wine">
+      <div class="meta">
+        <div class="tags"><span class="tag red">Rouge</span><span class="tag">AOP Fitou</span><span class="tag alert">Derniers stocks</span></div>
+        <h3>Les Pipelettes</h3>
+        <p class="sub">AOP Fitou · 70% Carignan, 15% Mourvèdre, 15% Grenache</p>
+        <p class="desc">Élaboré à partir d'une sélection de nos meilleures parcelles, vendangé à pleine maturité&nbsp;: des notes de pruneau et de fruits mûrs.</p>
+        <p class="specs"><b>Garde&nbsp;:</b> jusqu'à 15 ans</p>
+        <p class="pairing">Accompagne vos mets les plus fins.</p>
+      </div>
+      <div class="price-col"><div class="price">90&nbsp;€<span class="per">la caisse</span></div></div>
+    </article>
+
+    <!-- 3 -->
+    <article class="wine">
+      <div class="meta">
+        <div class="tags"><span class="tag red">Rouge</span><span class="tag">Saint-Émilion</span><span class="tag">2020</span></div>
+        <h3>Château Billeron Bouquey — Cuvée Calice</h3>
+        <p class="sub">Saint-Émilion · 80% Merlot, 20% Cabernet Franc</p>
+        <p class="desc">Robe rubis, arômes de fruits rouges (cerise) et notes légèrement toastées. Tanins soyeux et belle amplitude&nbsp;: le mariage de la finesse du terroir et du fruité du merlot.</p>
+        <p class="pairing">Superbe sur un carré d'agneau rôti aux herbes, un magret sauce aux cèpes, une entrecôte bordelaise, ou un vieux comté et un Saint-Nectaire fermier.</p>
+      </div>
+      <div class="price-col"><div class="price">99&nbsp;€<span class="per">la caisse</span></div></div>
+    </article>
+
+    <!-- 4 -->
+    <article class="wine">
+      <div class="meta">
+        <div class="tags"><span class="tag white">Blanc</span><span class="tag">AOP Saint-Chinian</span><span class="tag">2024</span></div>
+        <h3>Le Petit Paradis</h3>
+        <p class="sub">AOP Saint-Chinian · 50% Grenache blanc, 30% Marsanne, 20% Vermentino</p>
+        <p class="desc">Une rareté&nbsp;: à peine 5% de blancs dans l'appellation. Robe brillante aux reflets dorés, nez de fruits à chair blanche et de coing confit, bouche intense et suave à la finale épicée.</p>
+        <p class="pairing">Parfait dès l'apéritif, puis sur un poisson au four ou un waterzooi de volaille.</p>
+      </div>
+      <div class="price-col"><div class="price">60&nbsp;€<span class="per">la caisse</span></div></div>
+    </article>
+
+    <!-- 5 -->
+    <article class="wine">
+      <div class="meta">
+        <div class="tags"><span class="tag rose">Rosé</span><span class="tag">IGP Pays d'Oc</span><span class="tag">2025</span></div>
+        <h3>Esprit de Massia</h3>
+        <p class="sub">IGP Pays d'Oc · Grenache gris, Cinsault, Grenache noir</p>
+        <p class="desc">Robe délicatement pâle, arômes de petits fruits rouges croquants, de pêche blanche, parfois de pamplemousse. Frais et léger, comme on les aime.</p>
+        <p class="pairing">Idéal sur une salade de la mer, un carpaccio de dorade, des tapas méditerranéennes, ou de simples grillades de poisson et de volaille.</p>
+      </div>
+      <div class="price-col"><div class="price">48&nbsp;€<span class="per">la caisse</span></div></div>
+    </article>
+
+  </div>
+</section>
+
+<section class="section" id="commander">
+  <div class="wrap">
+    <div class="order-grid">
+      <div class="order-intro">
+        <div class="section-head" style="margin-bottom:24px;">
+          <p class="eyebrow">À vous de jouer</p>
+          <h2>Passer commande</h2>
+        </div>
+        <p>Choisissez vos caisses, laissez-nous vos coordonnées, et nous revenons vers vous pour la livraison et le règlement. Entre amis, tout simplement.</p>
+        <p style="font-size:.9rem;">Une question&nbsp;? Écrivez-nous à <a id="contact-mail" href="mailto:raph@veracruz.be">raph@veracruz.be</a>.</p>
+      </div>
+
+      <form id="order-form">
+        <div class="qty-list" id="qty-list"><!-- filled by JS --></div>
+
+        <div class="total-bar">
+          <span>Total estimé</span>
+          <span class="amount" id="total">0&nbsp;€</span>
+        </div>
+
+        <div class="row">
+          <label for="name">Votre nom</label>
+          <input type="text" id="name" name="name" required autocomplete="name" />
+        </div>
+        <div class="row">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required autocomplete="email" />
+        </div>
+        <div class="row">
+          <label for="phone">Téléphone (facultatif)</label>
+          <input type="text" id="phone" name="phone" autocomplete="tel" />
+        </div>
+        <div class="row">
+          <label for="message">Un mot (livraison, occasion…)</label>
+          <textarea id="message" name="message"></textarea>
+        </div>
+
+        <button type="submit" class="btn" id="submit-btn">Envoyer ma commande</button>
+        <p id="order-status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Vin de Source — une sélection entre amis &amp; en famille.</span>
+    <span>L'abus d'alcool est dangereux pour la santé. À consommer avec modération.</span>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   CONFIGURATION
+   ------------------------------------------------------------
+   Pour enregistrer les commandes dans un Google Sheet :
+   1. Ouvrez votre feuille Google Sheets > Extensions > Apps Script
+   2. Collez le script fourni (voir GOOGLE-SHEET.md), déployez-le
+      en "Application Web" (accès : tout le monde).
+   3. Copiez l'URL de déploiement et collez-la ci-dessous.
+   Tant que ce champ est vide, le bouton ouvre un email pré-rempli
+   (le site fonctionne quand même, sans configuration).
+   ============================================================ */
+const SHEET_WEBHOOK_URL = ""; // <-- collez ici l'URL Apps Script
+const CONTACT_EMAIL = "raph@veracruz.be";
+
+const WINES = [
+  { id: "vin-de-source", name: "Vin de Source", detail: "Fitou rouge · caisse de 6", price: 50 },
+  { id: "pipelettes",    name: "Les Pipelettes", detail: "AOP Fitou rouge", price: 90 },
+  { id: "calice",        name: "Château Billeron Bouquey — Calice 2020", detail: "Saint-Émilion rouge", price: 99 },
+  { id: "petit-paradis", name: "Le Petit Paradis", detail: "AOP Saint-Chinian blanc 2024", price: 60 },
+  { id: "esprit-massia", name: "Esprit de Massia", detail: "IGP Pays d'Oc rosé 2025", price: 48 },
+];
+
+const qtyList = document.getElementById("qty-list");
+const qty = {};
+
+WINES.forEach(w => {
+  qty[w.id] = 0;
+  const row = document.createElement("div");
+  row.className = "qty-row";
+  row.innerHTML =
+    '<div class="name">' + w.name + '<span>' + w.detail + ' — ' + w.price + ' €</span></div>' +
+    '<div class="stepper">' +
+      '<button type="button" aria-label="Retirer" data-act="dec" data-id="' + w.id + '">–</button>' +
+      '<input type="text" inputmode="numeric" value="0" data-id="' + w.id + '" aria-label="Quantité ' + w.name + '" />' +
+      '<button type="button" aria-label="Ajouter" data-act="inc" data-id="' + w.id + '">+</button>' +
+    '</div>';
+  qtyList.appendChild(row);
+});
+
+function fmt(n){ return n.toLocaleString("fr-FR") + " €"; }
+function recalc(){
+  let t = 0;
+  WINES.forEach(w => t += qty[w.id] * w.price);
+  document.getElementById("total").innerHTML = fmt(t);
+  return t;
+}
+function setQty(id, val){
+  val = Math.max(0, Math.min(99, parseInt(val,10) || 0));
+  qty[id] = val;
+  qtyList.querySelector('input[data-id="'+id+'"]').value = val;
+  recalc();
+}
+
+qtyList.addEventListener("click", e => {
+  const b = e.target.closest("button[data-act]");
+  if(!b) return;
+  const id = b.dataset.id;
+  setQty(id, qty[id] + (b.dataset.act === "inc" ? 1 : -1));
+});
+qtyList.addEventListener("input", e => {
+  if(e.target.matches('input[data-id]')) setQty(e.target.dataset.id, e.target.value);
+});
+
+document.getElementById("contact-mail").href = "mailto:" + CONTACT_EMAIL;
+
+function buildOrderLines(){
+  return WINES.filter(w => qty[w.id] > 0)
+    .map(w => qty[w.id] + " × " + w.name + " (" + (qty[w.id]*w.price) + " €)");
+}
+
+const form = document.getElementById("order-form");
+const statusEl = document.getElementById("order-status");
+const submitBtn = document.getElementById("submit-btn");
+
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  const total = recalc();
+  const lines = buildOrderLines();
+  statusEl.className = "";
+  if(lines.length === 0){
+    statusEl.className = "err";
+    statusEl.textContent = "Ajoutez au moins une caisse avant d'envoyer.";
+    return;
+  }
+  const data = {
+    date: new Date().toLocaleString("fr-FR"),
+    name: form.name.value.trim(),
+    email: form.email.value.trim(),
+    phone: form.phone.value.trim(),
+    message: form.message.value.trim(),
+    order: lines.join(" ; "),
+    total: total
+  };
+
+  // --- No webhook configured: fall back to a pre-filled email ---
+  if(!SHEET_WEBHOOK_URL){
+    const body =
+      "Bonjour,\n\nJe souhaite commander :\n- " + lines.join("\n- ") +
+      "\n\nTotal estimé : " + total + " €" +
+      "\n\nNom : " + data.name +
+      "\nEmail : " + data.email +
+      (data.phone ? "\nTéléphone : " + data.phone : "") +
+      (data.message ? "\nMessage : " + data.message : "") +
+      "\n\nMerci !";
+    window.location.href = "mailto:" + CONTACT_EMAIL +
+      "?subject=" + encodeURIComponent("Commande Vin de Source — " + data.name) +
+      "&body=" + encodeURIComponent(body);
+    statusEl.className = "ok";
+    statusEl.textContent = "Votre logiciel de messagerie s'ouvre avec la commande pré-remplie. Il ne reste qu'à l'envoyer.";
+    return;
+  }
+
+  // --- Webhook configured: post to Google Sheet ---
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Envoi…";
+  try{
+    await fetch(SHEET_WEBHOOK_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(data)
+    });
+    statusEl.className = "ok";
+    statusEl.textContent = "Merci " + (data.name || "") + " ! Votre commande est bien enregistrée, nous revenons vers vous très vite.";
+    form.reset();
+    WINES.forEach(w => setQty(w.id, 0));
+  }catch(err){
+    statusEl.className = "err";
+    statusEl.textContent = "Oups, l'envoi a échoué. Écrivez-nous directement à " + CONTACT_EMAIL + ".";
+  }finally{
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Envoyer ma commande";
+  }
+});
+
+recalc();
+</script>
+</body>
+</html>
