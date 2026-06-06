@@ -418,9 +418,12 @@ form.addEventListener("submit", async e => {
       body: JSON.stringify(data)
     });
     statusEl.className = "ok";
-    statusEl.textContent = "Merci " + (data.name || "") + " ! Votre commande est bien enregistrée, nous revenons vers vous très vite.";
-    form.reset();
-    WINES.forEach(w => setQty(w.id, 0));
+    statusEl.textContent = "Commande envoyée, redirection…";
+    try {
+      sessionStorage.setItem("vds_order", JSON.stringify({ name: data.name, lines: lines, total: total }));
+    } catch (e) { /* sessionStorage indisponible : on redirige quand même */ }
+    window.location.href = "merci.html";
+    return;
   }catch(err){
     statusEl.className = "err";
     statusEl.textContent = "Oups, l'envoi a échoué. Merci de réessayer dans un instant.";
