@@ -266,7 +266,7 @@
           <h2>Passer commande</h2>
         </div>
         <p>Choisissez vos caisses, laissez-nous vos coordonnées, et nous revenons vers vous pour la livraison et le règlement. Entre amis, tout simplement.</p>
-        <p style="font-size:.9rem;">Une question&nbsp;? <a id="contact-mail" href="mailto:jhcauwen@yp5.be">Écrivez-nous</a>.</p>
+        <p style="font-size:.9rem;">Une question&nbsp;? Glissez-la dans le mot ci-dessous, on vous répond.</p>
       </div>
 
       <form id="order-form">
@@ -320,8 +320,7 @@
    Tant que ce champ est vide, le bouton ouvre un email pré-rempli
    (le site fonctionne quand même, sans configuration).
    ============================================================ */
-const SHEET_WEBHOOK_URL = ""; // <-- collez ici l'URL Apps Script
-const CONTACT_EMAIL = "jhcauwen@yp5.be,jeanpierrekamp20@gmail.com,naim.rahal@gmail.com";
+const SHEET_WEBHOOK_URL = ""; // <-- collez ici l'URL Apps Script (/exec). OBLIGATOIRE : les commandes partent uniquement vers le Google Sheet.
 
 const WINES = [
   { id: "vin-de-source", name: "Vin de Source", detail: "Fitou rouge · caisse de 6", price: 50 },
@@ -372,8 +371,6 @@ qtyList.addEventListener("input", e => {
   if(e.target.matches('input[data-id]')) setQty(e.target.dataset.id, e.target.value);
 });
 
-document.getElementById("contact-mail").href = "mailto:" + CONTACT_EMAIL;
-
 function buildOrderLines(){
   return WINES.filter(w => qty[w.id] > 0)
     .map(w => qty[w.id] + " × " + w.name + " (" + (qty[w.id]*w.price) + " €)");
@@ -403,25 +400,14 @@ form.addEventListener("submit", async e => {
     total: total
   };
 
-  // --- No webhook configured: fall back to a pre-filled email ---
+  // --- Sans webhook, on ne fait rien (les commandes vont uniquement au Google Sheet) ---
   if(!SHEET_WEBHOOK_URL){
-    const body =
-      "Bonjour,\n\nJe souhaite commander :\n- " + lines.join("\n- ") +
-      "\n\nTotal estimé : " + total + " €" +
-      "\n\nNom : " + data.name +
-      "\nEmail : " + data.email +
-      (data.phone ? "\nTéléphone : " + data.phone : "") +
-      (data.message ? "\nMessage : " + data.message : "") +
-      "\n\nMerci !";
-    window.location.href = "mailto:" + CONTACT_EMAIL +
-      "?subject=" + encodeURIComponent("Commande Vin de Source — " + data.name) +
-      "&body=" + encodeURIComponent(body);
-    statusEl.className = "ok";
-    statusEl.textContent = "Votre logiciel de messagerie s'ouvre avec la commande pré-remplie. Il ne reste qu'à l'envoyer.";
+    statusEl.className = "err";
+    statusEl.textContent = "La prise de commande en ligne s'active dans un instant. Merci de réessayer un peu plus tard.";
     return;
   }
 
-  // --- Webhook configured: post to Google Sheet ---
+  // --- Envoi vers le Google Sheet ---
   submitBtn.disabled = true;
   submitBtn.textContent = "Envoi…";
   try{
@@ -437,7 +423,7 @@ form.addEventListener("submit", async e => {
     WINES.forEach(w => setQty(w.id, 0));
   }catch(err){
     statusEl.className = "err";
-    statusEl.textContent = "Oups, l'envoi a échoué. Écrivez-nous directement à " + CONTACT_EMAIL + ".";
+    statusEl.textContent = "Oups, l'envoi a échoué. Merci de réessayer dans un instant.";
   }finally{
     submitBtn.disabled = false;
     submitBtn.textContent = "Envoyer ma commande";
