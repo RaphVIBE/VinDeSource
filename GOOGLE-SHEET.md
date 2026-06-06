@@ -1,64 +1,68 @@
-# Enregistrer les commandes dans Google Sheets
+# Brancher les commandes sur Google Sheets — 5 minutes
 
-Le site fonctionne **sans configuration** : si rien n'est branché, le bouton
-« Envoyer ma commande » ouvre un email pré-rempli vers `raph@veracruz.be`.
-
-Pour recevoir les commandes directement dans une feuille Google Sheets, suivez
-ces 5 étapes (10 minutes, une seule fois).
+Le site marche déjà sans rien faire : le bouton ouvre un email pré-rempli.
+Ces étapes ajoutent en plus un enregistrement automatique dans une feuille
+Google Sheets **et** un email d'alerte à chaque commande.
 
 ## 1. Créer la feuille
-Créez un nouveau Google Sheets. En ligne 1, mettez les en-têtes :
+Va sur **https://sheets.new** (crée une feuille vierge).
+Pas besoin de mettre les en-têtes : le script les crée tout seul.
+Donne-lui un nom, par ex. « Commandes Vin de Source ».
 
-```
-date | name | email | phone | message | order | total
-```
+## 2. Ouvrir l'éditeur de script
+Dans la feuille : menu **Extensions > Apps Script**.
 
-## 2. Ouvrir Apps Script
-Dans le menu : **Extensions > Apps Script**.
+## 3. Coller le script
+Efface le contenu par défaut, puis colle tout le contenu du fichier
+**`Code.gs`** (fourni à côté de ce guide).
+Vérifie en haut que `NOTIFY_EMAIL` est bien ton adresse, puis enregistre
+(icône disquette ou Cmd+S).
 
-## 3. Coller ce script
-Effacez le contenu et collez :
+## 4. Déployer en application web
+- Clique **Déployer > Nouveau déploiement**.
+- Roue dentée > choisis **Application Web**.
+- *Description* : « commandes site ».
+- *Exécuter en tant que* : **Moi**.
+- *Qui a accès* : **Tout le monde**.
+- Clique **Déployer**.
+- Google demande une autorisation : **Autoriser l'accès** > choisis ton
+  compte > (si l'écran « Google n'a pas validé cette appli » apparaît :
+  *Paramètres avancés* > *Accéder à … (non sécurisé)* — c'est ton propre
+  script, sans risque).
+- **Copie l'URL de l'application web** (elle se termine par `/exec`).
 
-```javascript
-function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var d = JSON.parse(e.postData.contents);
-  sheet.appendRow([d.date, d.name, d.email, d.phone, d.message, d.order, d.total]);
-  return ContentService
-    .createTextOutput(JSON.stringify({ ok: true }))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-```
-
-Enregistrez (icône disquette).
-
-## 4. Déployer
-- Cliquez **Déployer > Nouveau déploiement**.
-- Type : **Application Web**.
-- « Exécuter en tant que » : **moi**.
-- « Qui a accès » : **Tout le monde**.
-- Cliquez **Déployer**, autorisez l'accès, puis **copiez l'URL** de
-  l'application web (elle finit par `/exec`).
+Tu peux vérifier : colle cette URL dans un navigateur, tu dois voir
+`{"status":"ok"}`.
 
 ## 5. Brancher le site
-Ouvrez `index.html`, trouvez la ligne :
+Ouvre `index.html`, repère tout en haut du `<script>` :
 
 ```javascript
 const SHEET_WEBHOOK_URL = "";
 ```
 
-et collez votre URL entre les guillemets :
+et colle ton URL :
 
 ```javascript
-const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/XXXX/exec";
+const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfy.../exec";
 ```
 
-C'est tout. Chaque commande apparaîtra automatiquement dans la feuille.
+Puis publie la mise à jour :
+
+```bash
+cd "/Users/raphael/Documents/Claude/Projects/Projet Vin /Projet Vin"
+git add index.html
+git commit -m "Branche les commandes sur Google Sheets"
+git push
+```
+
+Une minute plus tard, chaque commande passée sur le site arrivera
+automatiquement dans la feuille, et tu recevras un email.
 
 ---
 
-## Héberger le site (gratuit)
-`index.html` est un fichier autonome. Pour le mettre en ligne :
-- **Netlify Drop** (netlify.com/drop) : glissez le fichier, lien immédiat.
-- **GitHub Pages**, **Cloudflare Pages**, **Vercel** : tous gratuits.
-Aucune base de données ni serveur n'est nécessaire.
+### Astuce test
+Sur le site en ligne, ajoute une caisse, remplis tes coordonnées et envoie :
+une ligne doit apparaître dans la feuille et un email arriver.
+Si rien n'arrive, revérifie que « Qui a accès » est bien sur **Tout le monde**
+et que l'URL collée se termine par `/exec`.
