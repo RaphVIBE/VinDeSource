@@ -320,7 +320,7 @@
    Tant que ce champ est vide, le bouton ouvre un email pré-rempli
    (le site fonctionne quand même, sans configuration).
    ============================================================ */
-const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbz8ipsfchI1pNKKj5MTkAJO2ijy6ajmZmEmBR1XomObbHZbfUZaStQbAKlzSiXP8Tmy/exec";
+const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwKNWQB-HH1a9nfLHCi2cLnm1UOxxpFfjAPktReVp7LXneKiMHZobgPCTENkcUaGWf_/exec";
 
 const WINES = [
   { id: "vin-de-source", name: "Vin de Source", detail: "Fitou rouge · caisse de 6", price: 50 },
@@ -418,9 +418,12 @@ form.addEventListener("submit", async e => {
       body: JSON.stringify(data)
     });
     statusEl.className = "ok";
-    statusEl.textContent = "Merci " + (data.name || "") + " ! Votre commande est bien enregistrée, nous revenons vers vous très vite.";
-    form.reset();
-    WINES.forEach(w => setQty(w.id, 0));
+    statusEl.textContent = "Commande envoyée, redirection…";
+    try {
+      sessionStorage.setItem("vds_order", JSON.stringify({ name: data.name, lines: lines, total: total }));
+    } catch (e) { /* sessionStorage indisponible : on redirige quand même */ }
+    window.location.href = "merci.html";
+    return;
   }catch(err){
     statusEl.className = "err";
     statusEl.textContent = "Oups, l'envoi a échoué. Merci de réessayer dans un instant.";
