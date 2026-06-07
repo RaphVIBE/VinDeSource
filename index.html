@@ -3,30 +3,39 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Vin de Source — Une sélection entre amis</title>
+<title>Vin de Source · Sélection fraternelle</title>
 <meta name="description" content="Une petite sélection de vins choisis avec soin, à partager entre amis et en famille. Commande simple, à la caisse." />
+<meta property="og:title" content="Vin de Source · Sélection fraternelle" />
+<meta property="og:description" content="Une petite sélection de vins choisis avec soin, à partager entre amis et en famille." />
+<meta property="og:type" content="website" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root {
-    /* Warm parchment / ink palette (OKLCH, tinted neutrals) */
-    --paper:      oklch(0.975 0.012 75);
-    --paper-deep: oklch(0.945 0.016 72);
-    --ink:        oklch(0.265 0.018 40);
-    --ink-soft:   oklch(0.45 0.02 45);
-    --line:       oklch(0.87 0.018 70);
-    --garnet:     oklch(0.42 0.13 24);
-    --garnet-deep:oklch(0.34 0.12 24);
-    --gold:       oklch(0.62 0.09 75);
-    --white-rose: oklch(0.93 0.03 60);
+    /* Warm parchment / ink · OKLCH, tinted neutrals */
+    --paper:       oklch(0.976 0.012 75);
+    --paper-deep:  oklch(0.946 0.017 72);
+    --ink:         oklch(0.245 0.020 42);
+    --ink-soft:    oklch(0.46 0.022 46);
+    --line:        oklch(0.865 0.018 70);
+    --line-strong: oklch(0.30 0.02 42);
+    --garnet:      oklch(0.43 0.142 22);
+    --garnet-deep: oklch(0.31 0.115 22);
+    --gold:        oklch(0.60 0.095 72);
+    --rose:        oklch(0.60 0.105 18);
 
-    --maxw: 1080px;
-    --r: 4px;
+    /* Spacing scale */
+    --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px; --s5: 24px;
+    --s6: 32px; --s7: 48px; --s8: 64px; --s9: 96px; --s10: 128px;
+
+    --maxw: 1120px;
+    --r: 5px;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1); /* ease-out-quart */
   }
 
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   body {
     margin: 0;
     background: var(--paper);
@@ -35,128 +44,183 @@
     font-size: 17px;
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
-  h1, h2, h3, .display { font-family: "Fraunces", Georgia, serif; font-weight: 500; letter-spacing: -0.01em; }
+  h1, h2, h3, .display { font-family: "Fraunces", Georgia, serif; font-weight: 500; letter-spacing: -0.015em; line-height: 1.05; }
   a { color: var(--garnet); }
-  img { max-width: 100%; }
+  :focus-visible { outline: 2px solid var(--garnet); outline-offset: 3px; border-radius: 2px; }
 
-  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--s6); }
+  @media (max-width: 600px) { .wrap { padding: 0 var(--s5); } }
 
-  /* ---- Header ---- */
+  /* ---------- Header ---------- */
   header.site {
+    position: sticky; top: 0; z-index: 30;
+    background: color-mix(in oklch, var(--paper) 88%, transparent);
+    backdrop-filter: saturate(1.1) blur(8px);
     border-bottom: 1px solid var(--line);
-    background: var(--paper);
-    position: sticky; top: 0; z-index: 20;
   }
-  header.site .wrap {
-    display: flex; align-items: baseline; justify-content: space-between;
-    padding-top: 18px; padding-bottom: 18px; gap: 16px; flex-wrap: wrap;
-  }
-  .brand { font-family: "Fraunces", serif; font-size: 1.35rem; font-weight: 600; }
-  .brand small { display:block; font-family:"Inter",sans-serif; font-weight:400; font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color: var(--ink-soft); margin-top: 2px; }
-  nav.site a { color: var(--ink-soft); text-decoration: none; margin-left: 22px; font-size: .95rem; }
+  header.site .wrap { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); padding: var(--s4) var(--s6); }
+  .brand { font-family: "Fraunces", serif; font-size: 1.3rem; font-weight: 600; line-height: 1.1; }
+  .brand small { display:block; font-family:"Inter",sans-serif; font-weight:500; font-size:.66rem; letter-spacing:.2em; text-transform:uppercase; color: var(--gold); margin-top: 3px; }
+  nav.site { display: flex; gap: var(--s5); }
+  nav.site a { color: var(--ink-soft); text-decoration: none; font-size: .92rem; font-weight: 500; transition: color .2s var(--ease); }
   nav.site a:hover { color: var(--garnet); }
 
-  /* ---- Hero ---- */
-  .hero { padding: 84px 0 64px; border-bottom: 1px solid var(--line); }
-  .hero .eyebrow { text-transform: uppercase; letter-spacing: .22em; font-size: .75rem; color: var(--gold); margin: 0 0 18px; }
-  .hero h1 { font-size: clamp(2.6rem, 6vw, 4.4rem); line-height: 1.04; margin: 0 0 24px; max-width: 14ch; }
-  .hero p { font-size: 1.18rem; color: var(--ink-soft); max-width: 60ch; margin: 0 0 32px; }
+  /* ---------- Buttons ---------- */
   .btn {
-    display: inline-block; background: var(--garnet); color: var(--paper);
-    text-decoration: none; padding: 13px 26px; border-radius: var(--r);
-    font-weight: 500; font-size: 1rem; border: none; cursor: pointer;
-    transition: background .25s cubic-bezier(.22,1,.36,1), transform .25s cubic-bezier(.22,1,.36,1);
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--garnet); color: var(--paper);
+    text-decoration: none; padding: 14px 28px; border-radius: var(--r);
+    font-family: inherit; font-weight: 500; font-size: 1rem; border: none; cursor: pointer;
+    transition: background .25s var(--ease), transform .15s var(--ease), box-shadow .25s var(--ease);
+    box-shadow: 0 1px 0 color-mix(in oklch, var(--garnet-deep) 60%, transparent);
   }
-  .btn:hover { background: var(--garnet-deep); transform: translateY(-1px); }
-  .btn.ghost { background: transparent; color: var(--garnet); border: 1px solid var(--garnet); }
+  .btn:hover { background: var(--garnet-deep); transform: translateY(-2px); box-shadow: 0 8px 22px -10px var(--garnet); }
+  .btn:active { transform: translateY(0); }
+  .btn.ghost { background: transparent; color: var(--garnet); border: 1px solid var(--garnet); box-shadow: none; }
   .btn.ghost:hover { background: var(--garnet); color: var(--paper); }
 
-  .note-philanthropy {
-    margin-top: 30px; padding: 16px 20px; background: var(--paper-deep);
-    border: 1px solid var(--line); border-radius: var(--r);
-    font-size: .98rem; color: var(--ink-soft); max-width: 58ch;
-  }
-  .note-philanthropy strong { color: var(--ink); }
+  /* ---------- Hero ---------- */
+  .hero { padding: clamp(56px, 11vw, 128px) 0 clamp(40px, 7vw, 80px); }
+  .hero .eyebrow { display:inline-flex; align-items:center; gap: var(--s2); text-transform: uppercase; letter-spacing: .22em; font-size: .74rem; font-weight: 600; color: var(--garnet); margin: 0 0 var(--s5); }
+  .hero .eyebrow::before { content:""; width: 28px; height: 1px; background: var(--garnet); display:inline-block; }
+  .hero h1 { font-size: clamp(2.8rem, 8.5vw, 5.4rem); margin: 0 0 var(--s5); max-width: 15ch; }
+  .hero h1 em { font-style: italic; font-weight: 400; color: var(--garnet); }
+  .hero .lead { font-size: clamp(1.08rem, 2.4vw, 1.3rem); color: var(--ink-soft); max-width: 54ch; margin: 0 0 var(--s7); }
+  .hero .actions { display: flex; flex-wrap: wrap; gap: var(--s3); }
 
-  /* ---- Section heads ---- */
-  .section { padding: 72px 0; }
-  .section-head { margin-bottom: 48px; }
-  .section-head .eyebrow { text-transform: uppercase; letter-spacing: .2em; font-size: .73rem; color: var(--gold); margin: 0 0 10px; }
-  .section-head h2 { font-size: clamp(1.9rem, 4vw, 2.7rem); margin: 0; }
+  .anim { opacity: 0; transform: translateY(18px); animation: rise .7s var(--ease) forwards; }
+  .anim.d1 { animation-delay: .05s; } .anim.d2 { animation-delay: .15s; }
+  .anim.d3 { animation-delay: .25s; } .anim.d4 { animation-delay: .35s; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
 
-  /* ---- Wine list (editorial rows, not card grid) ---- */
+  /* ---------- Philanthropy band (committed color moment) ---------- */
+  .band { background: var(--garnet); color: var(--paper); }
+  .band .wrap { display: flex; align-items: center; gap: var(--s6); padding: var(--s7) var(--s6); }
+  .band .glass { flex: 0 0 auto; opacity: .9; }
+  .band p { margin: 0; font-family: "Fraunces", serif; font-weight: 400; font-size: clamp(1.25rem, 3vw, 1.9rem); line-height: 1.3; max-width: 30ch; }
+  .band p strong { font-weight: 600; }
+  @media (max-width: 640px) { .band .wrap { flex-direction: column; align-items: flex-start; gap: var(--s4); text-align: left; } }
+
+  /* ---------- Wines (editorial list with index numerals) ---------- */
+  .wines { padding: clamp(56px, 9vw, 104px) 0; }
+  .section-head { margin-bottom: var(--s8); max-width: 28ch; }
+  .section-head .eyebrow { text-transform: uppercase; letter-spacing: .2em; font-size: .72rem; font-weight: 600; color: var(--gold); margin: 0 0 var(--s3); }
+  .section-head h2 { font-size: clamp(1.8rem, 4.5vw, 2.9rem); margin: 0; }
+
   .wine {
-    display: grid; grid-template-columns: 1fr auto; gap: 8px 40px;
-    padding: 38px 0; border-top: 1px solid var(--line);
-    align-items: start;
+    display: grid; grid-template-columns: 4.5rem 1fr auto; gap: var(--s2) var(--s6);
+    padding: var(--s7) 0; border-top: 1px solid var(--line);
+    transition: background .3s var(--ease);
   }
-  .wine:last-child { border-bottom: 1px solid var(--line); }
-  .wine .meta { grid-column: 1; }
-  .wine .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
-  .tag {
-    font-size: .72rem; letter-spacing: .08em; text-transform: uppercase;
-    padding: 3px 10px; border-radius: 100px; border: 1px solid var(--line);
-    color: var(--ink-soft); background: var(--paper-deep);
-  }
-  .tag.red    { color: var(--garnet); border-color: var(--garnet); }
-  .tag.white  { color: var(--gold); border-color: var(--gold); }
-  .tag.rose   { color: oklch(0.55 0.11 18); border-color: oklch(0.62 0.1 18); }
-  .tag.alert  { color: var(--paper); background: var(--garnet); border-color: var(--garnet); }
-  .wine h3 { font-size: 1.7rem; margin: 0 0 4px; }
-  .wine .sub { color: var(--ink-soft); font-size: .98rem; margin: 0 0 16px; }
-  .wine .desc { max-width: 64ch; margin: 0 0 14px; }
-  .wine .specs { font-size: .9rem; color: var(--ink-soft); margin: 0; }
-  .wine .specs b { color: var(--ink); font-weight: 500; }
-  .wine .pairing { font-style: italic; color: var(--ink-soft); margin: 10px 0 0; max-width: 64ch; }
+  .wines .wine:last-child { border-bottom: 1px solid var(--line); }
+  .wine:hover { background: color-mix(in oklch, var(--paper-deep) 55%, transparent); }
+  .wine .num { grid-row: 1 / span 2; font-family: "Fraunces", serif; font-weight: 500; font-size: clamp(1.6rem, 3vw, 2.3rem); color: var(--line-strong); opacity: .55; transition: color .3s var(--ease), opacity .3s var(--ease); }
+  .wine:hover .num { color: var(--garnet); opacity: 1; }
+  .wine .meta { grid-column: 2; }
+  .wine .price-col { grid-column: 3; grid-row: 1; text-align: right; white-space: nowrap; }
 
-  .wine .price-col { grid-column: 2; grid-row: 1; text-align: right; min-width: 150px; }
-  .wine .price { font-family: "Fraunces", serif; font-size: 1.9rem; color: var(--ink); }
-  .wine .price .per { display: block; font-family: "Inter", sans-serif; font-size: .82rem; color: var(--ink-soft); margin-top: 2px; }
+  .tags { display: flex; flex-wrap: wrap; gap: var(--s2); margin: 0 0 var(--s3); }
+  .tag { font-size: .68rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 600; padding: 3px 10px; border-radius: 100px; border: 1px solid var(--line); color: var(--ink-soft); }
+  .tag.red   { color: var(--garnet); border-color: color-mix(in oklch, var(--garnet) 45%, var(--line)); }
+  .tag.white { color: var(--gold);   border-color: color-mix(in oklch, var(--gold) 45%, var(--line)); }
+  .tag.rose  { color: var(--rose);   border-color: color-mix(in oklch, var(--rose) 45%, var(--line)); }
+  .tag.alert { color: var(--paper); background: var(--garnet); border-color: var(--garnet); }
 
-  /* ---- Order form ---- */
-  #commander { background: var(--paper-deep); border-top: 1px solid var(--line); }
-  .order-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: start; }
-  .order-intro p { color: var(--ink-soft); max-width: 46ch; }
-  form .row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
-  form label { font-size: .9rem; font-weight: 500; }
-  form input[type=text], form input[type=email], form textarea {
-    font-family: inherit; font-size: 1rem; color: var(--ink);
-    background: var(--paper); border: 1px solid var(--line); border-radius: var(--r);
-    padding: 11px 13px;
-  }
-  form input:focus, form textarea:focus { outline: 2px solid var(--garnet); outline-offset: 1px; border-color: var(--garnet); }
-  textarea { resize: vertical; min-height: 80px; }
+  .wine h3 { font-size: clamp(1.45rem, 2.6vw, 1.85rem); margin: 0 0 var(--s1); }
+  .wine .sub { color: var(--ink-soft); font-size: .96rem; margin: 0 0 var(--s4); }
+  .wine .desc { max-width: 62ch; margin: 0 0 var(--s3); }
+  .wine .specs { font-size: .88rem; color: var(--ink-soft); margin: 0 0 var(--s2); }
+  .wine .specs b { color: var(--ink); font-weight: 600; }
+  .wine .pairing { font-family: "Fraunces", serif; font-style: italic; color: var(--ink-soft); margin: var(--s2) 0 0; max-width: 62ch; font-size: 1.02rem; }
 
-  .qty-list { border: 1px solid var(--line); border-radius: var(--r); background: var(--paper); overflow: hidden; margin-bottom: 20px; }
-  .qty-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  .wine .price { font-family: "Fraunces", serif; font-weight: 500; font-size: clamp(1.6rem, 3vw, 2.1rem); }
+  .wine .price .per { display: block; font-family: "Inter", sans-serif; font-size: .78rem; font-weight: 400; color: var(--ink-soft); margin-top: var(--s1); }
+
+  /* ---------- Order ---------- */
+  #commander { background: var(--paper-deep); border-top: 1px solid var(--line); padding: clamp(56px, 9vw, 104px) 0; scroll-margin-top: 72px; }
+  .order-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: var(--s9); align-items: start; }
+  .order-intro .section-head { margin-bottom: var(--s5); }
+  .order-intro p { color: var(--ink-soft); max-width: 42ch; }
+  .order-intro .reassure { margin-top: var(--s6); display: grid; gap: var(--s3); }
+  .order-intro .reassure div { display: flex; gap: var(--s3); align-items: baseline; font-size: .95rem; }
+  .order-intro .reassure b { font-family: "Fraunces", serif; color: var(--garnet); font-weight: 600; }
+
+  .qty-list { border: 1px solid var(--line); border-radius: var(--r); background: var(--paper); overflow: hidden; margin-bottom: var(--s5); }
+  .qty-row { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); padding: var(--s4); border-bottom: 1px solid var(--line); transition: background .2s var(--ease); }
   .qty-row:last-child { border-bottom: none; }
-  .qty-row .name { font-size: .95rem; }
-  .qty-row .name span { display:block; color: var(--ink-soft); font-size: .82rem; }
-  .stepper { display: flex; align-items: center; gap: 0; }
+  .qty-row.has-qty { background: color-mix(in oklch, var(--garnet) 6%, var(--paper)); }
+  .qty-row .name { font-weight: 500; font-size: .98rem; }
+  .qty-row .name span { display:block; color: var(--ink-soft); font-size: .8rem; font-weight: 400; margin-top: 1px; }
+  .stepper { display: flex; align-items: center; }
   .stepper button {
-    width: 32px; height: 32px; border: 1px solid var(--line); background: var(--paper-deep);
-    color: var(--ink); font-size: 1.1rem; cursor: pointer; line-height: 1;
+    width: 40px; height: 40px; border: 1px solid var(--line); background: var(--paper-deep);
+    color: var(--ink); font-size: 1.25rem; cursor: pointer; line-height: 1;
+    transition: background .15s var(--ease), transform .1s var(--ease), color .15s var(--ease);
   }
+  .stepper button:hover { background: var(--garnet); color: var(--paper); border-color: var(--garnet); }
+  .stepper button:active { transform: scale(.9); }
   .stepper button:first-child { border-radius: var(--r) 0 0 var(--r); }
-  .stepper button:last-child  { border-radius: 0 var(--r) var(--r) 0; }
-  .stepper input { width: 44px; height: 32px; text-align: center; border: 1px solid var(--line); border-left: 0; border-right: 0; font-family: inherit; font-size: 1rem; }
-  .total-bar { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0 22px; font-size: 1.05rem; }
-  .total-bar .amount { font-family: "Fraunces", serif; font-size: 1.7rem; }
+  .stepper button:last-child { border-radius: 0 var(--r) var(--r) 0; }
+  .stepper input { width: 46px; height: 40px; text-align: center; border: 1px solid var(--line); border-left: 0; border-right: 0; font-family: inherit; font-size: 1rem; font-weight: 600; background: var(--paper); color: var(--ink); -moz-appearance: textfield; }
+  .stepper input.bump { animation: bump .3s var(--ease); }
+  @keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.28); color: var(--garnet); } 100% { transform: scale(1); } }
 
-  #order-status { margin-top: 14px; font-size: .95rem; }
+  .total-bar { display: flex; justify-content: space-between; align-items: baseline; padding: var(--s4) 0 var(--s6); border-top: 2px solid var(--line-strong); }
+  .total-bar .label { font-size: 1.02rem; }
+  .total-bar .amount { font-family: "Fraunces", serif; font-size: clamp(1.7rem, 4vw, 2.1rem); transition: color .3s var(--ease); }
+
+  form .row { display: flex; flex-direction: column; gap: var(--s2); margin-bottom: var(--s4); }
+  form label { font-size: .88rem; font-weight: 600; }
+  form input { font-family: inherit; font-size: 1rem; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; transition: border-color .2s var(--ease), box-shadow .2s var(--ease); }
+  form input:focus { outline: none; border-color: var(--garnet); box-shadow: 0 0 0 3px color-mix(in oklch, var(--garnet) 18%, transparent); }
+  .submit-row { margin-top: var(--s5); }
+  .submit-row .btn { width: 100%; padding: 16px; font-size: 1.05rem; }
+  #order-status { margin-top: var(--s3); font-size: .95rem; min-height: 1.2em; }
   #order-status.ok  { color: var(--garnet-deep); }
-  #order-status.err { color: oklch(0.5 0.16 28); }
+  #order-status.err { color: oklch(0.5 0.17 28); }
 
-  /* ---- Footer ---- */
-  footer.site { padding: 48px 0; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: .9rem; }
-  footer.site .wrap { display:flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  /* ---------- Footer ---------- */
+  footer.site { padding: var(--s8) 0; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: .88rem; }
+  footer.site .wrap { display:flex; justify-content: space-between; flex-wrap: wrap; gap: var(--s3); align-items: center; }
+  footer.site .modo { font-style: italic; }
 
-  @media (max-width: 800px) {
-    .order-grid { grid-template-columns: 1fr; gap: 36px; }
-    .wine { grid-template-columns: 1fr; }
-    .wine .price-col { grid-column: 1; grid-row: auto; text-align: left; margin-bottom: 6px; }
-    nav.site a:first-child { margin-left: 0; }
+  /* ---------- Mobile sticky CTA ---------- */
+  .mcta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: none; align-items: center; justify-content: space-between; gap: var(--s4); padding: var(--s3) var(--s5); background: color-mix(in oklch, var(--paper) 92%, transparent); backdrop-filter: blur(8px); border-top: 1px solid var(--line); transform: translateY(120%); transition: transform .35s var(--ease); }
+  .mcta.show { transform: none; }
+  .mcta .mtotal { font-family: "Fraunces", serif; font-size: 1.3rem; }
+  .mcta .mtotal small { display:block; font-family:"Inter"; font-size:.7rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .mcta .btn { padding: 12px 22px; }
+
+  /* ---------- Reveal on scroll ---------- */
+  .reveal { opacity: 0; transform: translateY(22px); }
+  .reveal.in { opacity: 1; transform: none; transition: opacity .65s var(--ease), transform .65s var(--ease); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 860px) {
+    .order-grid { grid-template-columns: 1fr; gap: var(--s7); }
+  }
+  @media (max-width: 700px) {
+    nav.site { gap: var(--s4); }
+    .wine { grid-template-columns: 2.6rem 1fr; gap: var(--s1) var(--s4); }
+    .wine .num { grid-row: 1; font-size: 1.4rem; }
+    .wine .meta { grid-column: 1 / -1; }
+    .wine .price-col { grid-column: 1 / -1; grid-row: auto; text-align: left; margin-top: var(--s2); }
+    .wine .price { font-size: 1.5rem; }
+    .wine .price .per { display: inline; margin-left: var(--s2); }
+    .mcta { display: flex; }
+    body { padding-bottom: 76px; }
+  }
+  @media (max-width: 420px) {
+    .brand small { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .anim { opacity: 1; transform: none; animation: none; }
+    .reveal { opacity: 1; transform: none; }
+    *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
   }
 </style>
 </head>
@@ -174,26 +238,35 @@
 
 <section class="hero">
   <div class="wrap">
-    <p class="eyebrow">De retour pour l'été</p>
-    <h1>Une petite sélection, choisie avec soin.</h1>
-    <p>Des vins que nous aimons, partagés entre amis et en famille. Commande simple, à la caisse, livrée près de chez vous.</p>
-    <a href="#vins" class="btn">Découvrir la sélection</a>
-    <a href="#commander" class="btn ghost" style="margin-left:10px;">Passer commande</a>
-    <div class="note-philanthropy">
-      <strong>Vin de Source</strong> revient pour agrémenter vos tables d'été, tout en participant à une œuvre philanthropique. Boire bien, et faire un peu de bien.
+    <p class="eyebrow anim d1">De retour pour l'été</p>
+    <h1 class="anim d2">Une petite sélection, choisie <em>avec soin.</em></h1>
+    <p class="lead anim d3">Des vins que nous aimons, partagés entre amis et en famille. Commande simple, à la caisse, livrée près de chez vous.</p>
+    <div class="actions anim d4">
+      <a href="#vins" class="btn">Découvrir la sélection</a>
+      <a href="#commander" class="btn ghost">Passer commande</a>
     </div>
   </div>
 </section>
 
-<section class="section" id="vins">
+<aside class="band reveal">
   <div class="wrap">
-    <div class="section-head">
+    <svg class="glass" width="40" height="56" viewBox="0 0 40 56" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 4h24c0 11-5 19-12 20-7-1-12-9-12-20Z" fill="oklch(0.976 0.012 75)" fill-opacity="0.92"/>
+      <path d="M20 24v22M11 52h18" stroke="oklch(0.976 0.012 75)" stroke-width="2.4" stroke-linecap="round" stroke-opacity="0.92"/>
+    </svg>
+    <p><strong>Vin de Source</strong> revient pour vos tables d'été, tout en soutenant une œuvre philanthropique. Boire bien, et faire un peu de bien.</p>
+  </div>
+</aside>
+
+<section class="wines" id="vins">
+  <div class="wrap">
+    <div class="section-head reveal">
       <p class="eyebrow">La cave</p>
-      <h2>Cinq vins, du quotidien aux grandes occasions</h2>
+      <h2>Cinq vins, du quotidien aux grandes occasions.</h2>
     </div>
 
-    <!-- 1 -->
-    <article class="wine">
+    <article class="wine reveal">
+      <div class="num">01</div>
       <div class="meta">
         <div class="tags"><span class="tag red">Rouge</span><span class="tag">Fitou</span></div>
         <h3>Vin de Source</h3>
@@ -205,8 +278,8 @@
       <div class="price-col"><div class="price">50&nbsp;€<span class="per">la caisse de 6</span></div></div>
     </article>
 
-    <!-- 2 -->
-    <article class="wine">
+    <article class="wine reveal">
+      <div class="num">02</div>
       <div class="meta">
         <div class="tags"><span class="tag red">Rouge</span><span class="tag">AOP Fitou</span><span class="tag alert">Derniers stocks</span></div>
         <h3>Les Pipelettes</h3>
@@ -218,11 +291,11 @@
       <div class="price-col"><div class="price">90&nbsp;€<span class="per">la caisse</span></div></div>
     </article>
 
-    <!-- 3 -->
-    <article class="wine">
+    <article class="wine reveal">
+      <div class="num">03</div>
       <div class="meta">
         <div class="tags"><span class="tag red">Rouge</span><span class="tag">Saint-Émilion</span><span class="tag">2020</span></div>
-        <h3>Château Billeron Bouquey — Cuvée Calice</h3>
+        <h3>Château Billeron Bouquey, Cuvée Calice</h3>
         <p class="sub">Saint-Émilion · 80% Merlot, 20% Cabernet Franc</p>
         <p class="desc">Robe rubis, arômes de fruits rouges (cerise) et notes légèrement toastées. Tanins soyeux et belle amplitude&nbsp;: le mariage de la finesse du terroir et du fruité du merlot.</p>
         <p class="pairing">Superbe sur un carré d'agneau rôti aux herbes, un magret sauce aux cèpes, une entrecôte bordelaise, ou un vieux comté et un Saint-Nectaire fermier.</p>
@@ -230,8 +303,8 @@
       <div class="price-col"><div class="price">99&nbsp;€<span class="per">la caisse</span></div></div>
     </article>
 
-    <!-- 4 -->
-    <article class="wine">
+    <article class="wine reveal">
+      <div class="num">04</div>
       <div class="meta">
         <div class="tags"><span class="tag white">Blanc</span><span class="tag">AOP Saint-Chinian</span><span class="tag">2024</span></div>
         <h3>Le Petit Paradis</h3>
@@ -242,8 +315,8 @@
       <div class="price-col"><div class="price">60&nbsp;€<span class="per">la caisse</span></div></div>
     </article>
 
-    <!-- 5 -->
-    <article class="wine">
+    <article class="wine reveal">
+      <div class="num">05</div>
       <div class="meta">
         <div class="tags"><span class="tag rose">Rosé</span><span class="tag">IGP Pays d'Oc</span><span class="tag">2025</span></div>
         <h3>Esprit de Massia</h3>
@@ -257,22 +330,27 @@
   </div>
 </section>
 
-<section class="section" id="commander">
+<section id="commander">
   <div class="wrap">
     <div class="order-grid">
-      <div class="order-intro">
-        <div class="section-head" style="margin-bottom:24px;">
+      <div class="order-intro reveal">
+        <div class="section-head">
           <p class="eyebrow">À vous de jouer</p>
-          <h2>Passer commande</h2>
+          <h2>Passer commande.</h2>
         </div>
         <p>Choisissez vos caisses, laissez-nous votre nom et votre email, et nous revenons vers vous pour la livraison et le règlement. Entre amis, tout simplement.</p>
+        <div class="reassure">
+          <div><b>01</b><span>Vous choisissez vos caisses ci-contre.</span></div>
+          <div><b>02</b><span>Nous vous recontactons pour la livraison.</span></div>
+          <div><b>03</b><span>Le règlement se fait de la main à la main.</span></div>
+        </div>
       </div>
 
-      <form id="order-form">
-        <div class="qty-list" id="qty-list"><!-- filled by JS --></div>
+      <form id="order-form" novalidate>
+        <div class="qty-list" id="qty-list"></div>
 
         <div class="total-bar">
-          <span>Total estimé</span>
+          <span class="label">Total estimé</span>
           <span class="amount" id="total">0&nbsp;€</span>
         </div>
 
@@ -285,8 +363,10 @@
           <input type="email" id="email" name="email" required autocomplete="email" />
         </div>
 
-        <button type="submit" class="btn" id="submit-btn">Envoyer ma commande</button>
-        <p id="order-status"></p>
+        <div class="submit-row">
+          <button type="submit" class="btn" id="submit-btn">Envoyer ma commande</button>
+          <p id="order-status" role="status" aria-live="polite"></p>
+        </div>
       </form>
     </div>
   </div>
@@ -294,77 +374,82 @@
 
 <footer class="site">
   <div class="wrap">
-    <span>Vin de Source — une sélection fraternelle, entre amis &amp; en famille.</span>
-    <span>L'abus d'alcool est dangereux pour la santé. À consommer avec modération.</span>
+    <span>Vin de Source. Une sélection fraternelle, entre amis &amp; en famille.</span>
+    <span class="modo">L'abus d'alcool est dangereux pour la santé. À consommer avec modération.</span>
   </div>
 </footer>
 
+<div class="mcta" id="mcta" aria-hidden="true">
+  <span class="mtotal" id="mcta-total">0&nbsp;€<small>Total estimé</small></span>
+  <a href="#commander" class="btn">Commander</a>
+</div>
+
 <script>
 /* ============================================================
-   CONFIGURATION
-   ------------------------------------------------------------
-   Pour enregistrer les commandes dans un Google Sheet :
-   1. Ouvrez votre feuille Google Sheets > Extensions > Apps Script
-   2. Collez le script fourni (voir GOOGLE-SHEET.md), déployez-le
-      en "Application Web" (accès : tout le monde).
-   3. Copiez l'URL de déploiement et collez-la ci-dessous.
-   Tant que ce champ est vide, le bouton ouvre un email pré-rempli
-   (le site fonctionne quand même, sans configuration).
+   CONFIGURATION · voir GOOGLE-SHEET.md
    ============================================================ */
 const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwaNdSY8N6Gv4b6-O5RF7NysCq6Tz2bEG8PQKw6T9dmAQvZRBX8PTncVnJAcIPdA-uv/exec";
 
 const WINES = [
   { id: "vin-de-source", name: "Vin de Source", detail: "Fitou rouge · caisse de 6", price: 50 },
   { id: "pipelettes",    name: "Les Pipelettes", detail: "AOP Fitou rouge", price: 90 },
-  { id: "calice",        name: "Château Billeron Bouquey — Calice 2020", detail: "Saint-Émilion rouge", price: 99 },
+  { id: "calice",        name: "Château Billeron (Calice 2020)", detail: "Saint-Émilion rouge", price: 99 },
   { id: "petit-paradis", name: "Le Petit Paradis", detail: "AOP Saint-Chinian blanc 2024", price: 60 },
   { id: "esprit-massia", name: "Esprit de Massia", detail: "IGP Pays d'Oc rosé 2025", price: 48 },
 ];
 
 const qtyList = document.getElementById("qty-list");
+const totalEl = document.getElementById("total");
+const mctaTotalEl = document.getElementById("mcta-total");
 const qty = {};
 
 WINES.forEach(w => {
   qty[w.id] = 0;
   const row = document.createElement("div");
   row.className = "qty-row";
+  row.dataset.id = w.id;
   row.innerHTML =
-    '<div class="name">' + w.name + '<span>' + w.detail + ' — ' + w.price + ' €</span></div>' +
+    '<div class="name">' + w.name + '<span>' + w.detail + ' · ' + w.price + ' €</span></div>' +
     '<div class="stepper">' +
-      '<button type="button" aria-label="Retirer" data-act="dec" data-id="' + w.id + '">–</button>' +
+      '<button type="button" aria-label="Retirer une caisse de ' + w.name + '" data-act="dec" data-id="' + w.id + '">–</button>' +
       '<input type="text" inputmode="numeric" value="0" data-id="' + w.id + '" aria-label="Quantité ' + w.name + '" />' +
-      '<button type="button" aria-label="Ajouter" data-act="inc" data-id="' + w.id + '">+</button>' +
+      '<button type="button" aria-label="Ajouter une caisse de ' + w.name + '" data-act="inc" data-id="' + w.id + '">+</button>' +
     '</div>';
   qtyList.appendChild(row);
 });
 
-function fmt(n){ return n.toLocaleString("fr-FR") + " €"; }
+function fmt(n){ return n.toLocaleString("fr-FR") + " €"; }
 function recalc(){
   let t = 0;
   WINES.forEach(w => t += qty[w.id] * w.price);
-  document.getElementById("total").innerHTML = fmt(t);
+  totalEl.innerHTML = fmt(t);
+  if (mctaTotalEl) mctaTotalEl.innerHTML = fmt(t) + '<small>Total estimé</small>';
   return t;
 }
-function setQty(id, val){
-  val = Math.max(0, Math.min(99, parseInt(val,10) || 0));
+function setQty(id, val, bump){
+  val = Math.max(0, Math.min(99, parseInt(val, 10) || 0));
   qty[id] = val;
-  qtyList.querySelector('input[data-id="'+id+'"]').value = val;
+  const input = qtyList.querySelector('input[data-id="' + id + '"]');
+  input.value = val;
+  const row = qtyList.querySelector('.qty-row[data-id="' + id + '"]');
+  if (row) row.classList.toggle("has-qty", val > 0);
+  if (bump) { input.classList.remove("bump"); void input.offsetWidth; input.classList.add("bump"); }
   recalc();
 }
 
 qtyList.addEventListener("click", e => {
   const b = e.target.closest("button[data-act]");
-  if(!b) return;
+  if (!b) return;
   const id = b.dataset.id;
-  setQty(id, qty[id] + (b.dataset.act === "inc" ? 1 : -1));
+  setQty(id, qty[id] + (b.dataset.act === "inc" ? 1 : -1), true);
 });
 qtyList.addEventListener("input", e => {
-  if(e.target.matches('input[data-id]')) setQty(e.target.dataset.id, e.target.value);
+  if (e.target.matches('input[data-id]')) setQty(e.target.dataset.id, e.target.value, false);
 });
 
 function buildOrderLines(){
   return WINES.filter(w => qty[w.id] > 0)
-    .map(w => qty[w.id] + " × " + w.name + " (" + (qty[w.id]*w.price) + " €)");
+    .map(w => qty[w.id] + " × " + w.name + " (" + (qty[w.id] * w.price) + " €)");
 }
 
 const form = document.getElementById("order-form");
@@ -376,11 +461,17 @@ form.addEventListener("submit", async e => {
   const total = recalc();
   const lines = buildOrderLines();
   statusEl.className = "";
-  if(lines.length === 0){
+  if (lines.length === 0){
     statusEl.className = "err";
     statusEl.textContent = "Ajoutez au moins une caisse avant d'envoyer.";
     return;
   }
+  if (!form.name.value.trim() || !form.email.value.trim()){
+    statusEl.className = "err";
+    statusEl.textContent = "Indiquez votre nom et votre email pour finaliser.";
+    return;
+  }
+
   const data = {
     date: new Date().toLocaleString("fr-FR"),
     name: form.name.value.trim(),
@@ -391,7 +482,7 @@ form.addEventListener("submit", async e => {
   WINES.forEach(w => data.qty[w.id] = qty[w.id]);
 
   // --- Sans webhook, on ne fait rien (les commandes vont uniquement au Google Sheet) ---
-  if(!SHEET_WEBHOOK_URL){
+  if (!SHEET_WEBHOOK_URL){
     statusEl.className = "err";
     statusEl.textContent = "La prise de commande en ligne s'active dans un instant. Merci de réessayer un peu plus tard.";
     return;
@@ -400,7 +491,7 @@ form.addEventListener("submit", async e => {
   // --- Envoi vers le Google Sheet ---
   submitBtn.disabled = true;
   submitBtn.textContent = "Envoi…";
-  try{
+  try {
     await fetch(SHEET_WEBHOOK_URL, {
       method: "POST",
       mode: "no-cors",
@@ -414,16 +505,40 @@ form.addEventListener("submit", async e => {
     } catch (e) { /* sessionStorage indisponible : on redirige quand même */ }
     window.location.href = "merci.html";
     return;
-  }catch(err){
+  } catch (err) {
     statusEl.className = "err";
     statusEl.textContent = "Oups, l'envoi a échoué. Merci de réessayer dans un instant.";
-  }finally{
+  } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = "Envoyer ma commande";
   }
 });
 
+/* ---- Delight & adapt: scroll reveals + mobile sticky CTA ---- */
+const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+if (!reduce && "IntersectionObserver" in window){
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => { if (en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); } });
+  }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+} else {
+  document.querySelectorAll(".reveal").forEach(el => el.classList.add("in"));
+}
+
+const mcta = document.getElementById("mcta");
+if ("IntersectionObserver" in window){
+  const formIO = new IntersectionObserver((entries) => {
+    entries.forEach(en => { mcta.classList.toggle("show", !en.isIntersecting); });
+  }, { threshold: 0 });
+  formIO.observe(document.getElementById("commander"));
+}
+
 recalc();
+
+/* Petit clin d'œil pour les curieux */
+console.log("%cSanté ! 🍷", "font-size:16px;color:#7b1e2b;font-weight:bold");
+console.log("Vin de Source · une sélection fraternelle, entre amis & en famille.");
 </script>
 </body>
 </html>
