@@ -164,7 +164,7 @@
 
 <header class="site">
   <div class="wrap">
-    <div class="brand">Vin de Source<small>Sélection entre amis</small></div>
+    <div class="brand">Vin de Source<small>Sélection fraternelle</small></div>
     <nav class="site">
       <a href="#vins">Les vins</a>
       <a href="#commander">Commander</a>
@@ -265,8 +265,7 @@
           <p class="eyebrow">À vous de jouer</p>
           <h2>Passer commande</h2>
         </div>
-        <p>Choisissez vos caisses, laissez-nous vos coordonnées, et nous revenons vers vous pour la livraison et le règlement. Entre amis, tout simplement.</p>
-        <p style="font-size:.9rem;">Une question&nbsp;? Glissez-la dans le mot ci-dessous, on vous répond.</p>
+        <p>Choisissez vos caisses, laissez-nous votre nom et votre email, et nous revenons vers vous pour la livraison et le règlement. Entre amis, tout simplement.</p>
       </div>
 
       <form id="order-form">
@@ -285,14 +284,6 @@
           <label for="email">Email</label>
           <input type="email" id="email" name="email" required autocomplete="email" />
         </div>
-        <div class="row">
-          <label for="phone">Téléphone (facultatif)</label>
-          <input type="text" id="phone" name="phone" autocomplete="tel" />
-        </div>
-        <div class="row">
-          <label for="message">Un mot (livraison, occasion…)</label>
-          <textarea id="message" name="message"></textarea>
-        </div>
 
         <button type="submit" class="btn" id="submit-btn">Envoyer ma commande</button>
         <p id="order-status"></p>
@@ -303,7 +294,7 @@
 
 <footer class="site">
   <div class="wrap">
-    <span>Vin de Source — une sélection entre amis &amp; en famille.</span>
+    <span>Vin de Source — une sélection fraternelle, entre amis &amp; en famille.</span>
     <span>L'abus d'alcool est dangereux pour la santé. À consommer avec modération.</span>
   </div>
 </footer>
@@ -320,7 +311,7 @@
    Tant que ce champ est vide, le bouton ouvre un email pré-rempli
    (le site fonctionne quand même, sans configuration).
    ============================================================ */
-const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwKNWQB-HH1a9nfLHCi2cLnm1UOxxpFfjAPktReVp7LXneKiMHZobgPCTENkcUaGWf_/exec";
+const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwaNdSY8N6Gv4b6-O5RF7NysCq6Tz2bEG8PQKw6T9dmAQvZRBX8PTncVnJAcIPdA-uv/exec";
 
 const WINES = [
   { id: "vin-de-source", name: "Vin de Source", detail: "Fitou rouge · caisse de 6", price: 50 },
@@ -394,11 +385,10 @@ form.addEventListener("submit", async e => {
     date: new Date().toLocaleString("fr-FR"),
     name: form.name.value.trim(),
     email: form.email.value.trim(),
-    phone: form.phone.value.trim(),
-    message: form.message.value.trim(),
-    order: lines.join(" ; "),
+    qty: {},          // quantité par vin, dans l'ordre de WINES
     total: total
   };
+  WINES.forEach(w => data.qty[w.id] = qty[w.id]);
 
   // --- Sans webhook, on ne fait rien (les commandes vont uniquement au Google Sheet) ---
   if(!SHEET_WEBHOOK_URL){
