@@ -1,68 +1,37 @@
-# Brancher les commandes sur Google Sheets — 5 minutes
+# Commandes → Google Sheets (2026-v2)
 
-Le site marche déjà sans rien faire : le bouton ouvre un email pré-rempli.
-Ces étapes ajoutent en plus un enregistrement automatique dans une feuille
-Google Sheets **et** un email d'alerte à chaque commande.
+Chaque commande passée sur le site arrive dans la feuille
+**« Vin de source 2026-v2 »** (Drive de rhombroeck@gmail.com) et déclenche
+un email d'alerte à rhombroeck@gmail.com.
 
-## 1. Créer la feuille
-Va sur **https://sheets.new** (crée une feuille vierge).
-Pas besoin de mettre les en-têtes : le script les crée tout seul.
-Donne-lui un nom, par ex. « Commandes Vin de Source ».
+## La feuille
+Onglet **Commande**, une ligne par commande :
 
-## 2. Ouvrir l'éditeur de script
-Dans la feuille : menu **Extensions > Apps Script**.
+`date · name · email · téléphone · message · une colonne par vin et par format · total`
 
-## 3. Coller le script
-Efface le contenu par défaut, puis colle tout le contenu du fichier
-**`Code.gs`** (fourni à côté de ce guide).
-Vérifie en haut que `NOTIFY_EMAIL` est bien ton adresse, puis enregistre
-(icône disquette ou Cmd+S).
+Les vins vendus à l'unité ont deux colonnes : `(cartons)` et `(bouteilles)`.
+Vin de Source et Les Pipelettes n'ont qu'une colonne `(cartons)`.
+Le script remet la ligne d'en-têtes d'aplomb tout seul si elle est abîmée.
 
-## 4. Déployer en application web
-- Clique **Déployer > Nouveau déploiement**.
-- Roue dentée > choisis **Application Web**.
-- *Description* : « commandes site ».
-- *Exécuter en tant que* : **Moi**.
-- *Qui a accès* : **Tout le monde**.
-- Clique **Déployer**.
-- Google demande une autorisation : **Autoriser l'accès** > choisis ton
-  compte > (si l'écran « Google n'a pas validé cette appli » apparaît :
-  *Paramètres avancés* > *Accéder à … (non sécurisé)* — c'est ton propre
-  script, sans risque).
-- **Copie l'URL de l'application web** (elle se termine par `/exec`).
+L'ancienne feuille « Vin de source 2026 » garde les commandes de l'été.
 
-Tu peux vérifier : colle cette URL dans un navigateur, tu dois voir
-`{"status":"ok"}`.
+## Le script
+`Code.gs` est la copie du script lié à la feuille (Extensions > Apps Script).
+Déploiement : application Web, exécutée en tant que rhombroeck@gmail.com,
+accès « Tout le monde ». L'URL est dans `index.html` (`SHEET_WEBHOOK_URL`).
 
-## 5. Brancher le site
-Ouvre `index.html`, repère tout en haut du `<script>` :
+Ouvrir l'URL `/exec` dans un navigateur doit afficher
+`{"status":"ok","version":"2026-v2"}`.
 
-```javascript
-const SHEET_WEBHOOK_URL = "";
-```
+### Tester sans le site
+Dans Apps Script, choisis la fonction `testCommande` et clique **Exécuter** :
+une ligne TEST apparaît (pas d'email).
 
-et colle ton URL :
+### Après une modification du code
+**Déployer > Gérer les déploiements > (crayon) > Version : Nouvelle version >
+Déployer.** L'URL ne change pas.
 
-```javascript
-const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfy.../exec";
-```
-
-Puis publie la mise à jour :
-
-```bash
-cd "/Users/raphael/Documents/Claude/Projects/Projet Vin /Projet Vin"
-git add index.html
-git commit -m "Branche les commandes sur Google Sheets"
-git push
-```
-
-Une minute plus tard, chaque commande passée sur le site arrivera
-automatiquement dans la feuille, et tu recevras un email.
-
----
-
-### Astuce test
-Sur le site en ligne, ajoute une caisse, remplis tes coordonnées et envoie :
-une ligne doit apparaître dans la feuille et un email arriver.
-Si rien n'arrive, revérifie que « Qui a accès » est bien sur **Tout le monde**
-et que l'URL collée se termine par `/exec`.
+### Ajouter ou retirer un vin
+1. Dans `index.html`, tableau `WINES` (id, nom, prix carton, prix bouteille ou `null`).
+2. Dans `Code.gs`, tableau `WINE_COLUMNS` (même id + `:carton` / `:bouteille`).
+3. Redéployer le script (voir ci-dessus).

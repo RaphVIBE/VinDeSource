@@ -110,19 +110,20 @@
       if (o.name) {
         document.getElementById("title").textContent = "Merci " + o.name + ", c'est validé !";
       }
-      if (Array.isArray(o.lines) && o.lines.length) {
+      const eur = function(n){
+        const c = Math.round(Number(n) * 100);
+        return (c / 100).toLocaleString("fr-FR", { minimumFractionDigits: c % 100 ? 2 : 0, maximumFractionDigits: 2 }) + " €";
+      };
+      if (Array.isArray(o.items) && o.items.length) {
         const ul = document.getElementById("recap-lines");
-        o.lines.forEach(function(line){
+        o.items.forEach(function(it){
           const li = document.createElement("li");
-          const m = line.match(/^(.*)\s\((\d+)\s*€\)$/);
-          if (m) {
-            li.innerHTML = '<span>' + m[1] + '</span><span>' + Number(m[2]).toLocaleString("fr-FR") + ' €</span>';
-          } else {
-            li.textContent = line;
-          }
+          const a = document.createElement("span"); a.textContent = it.label;
+          const b = document.createElement("span"); b.textContent = eur(it.amount);
+          li.appendChild(a); li.appendChild(b);
           ul.appendChild(li);
         });
-        document.getElementById("recap-total").textContent = Number(o.total).toLocaleString("fr-FR") + " €";
+        document.getElementById("recap-total").textContent = eur(o.total);
         document.getElementById("recap").style.display = "block";
       }
       sessionStorage.removeItem("vds_order");
