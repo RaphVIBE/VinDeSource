@@ -137,10 +137,14 @@
 
   .wine .price { font-family: "Fraunces", serif; font-weight: 500; font-size: clamp(1.6rem, 3vw, 2.1rem); }
   .wine .price .per { display: block; font-family: "Inter", sans-serif; font-size: .78rem; font-weight: 400; color: var(--ink-soft); margin-top: var(--s1); }
+  .wine .price-col .alt { display: inline-block; margin-top: var(--s3); font-size: .85rem; font-weight: 500; color: var(--ink); padding: 4px 10px; border: 1px solid var(--line); border-radius: 100px; }
+  .wine .price-col .only { display: block; margin-top: var(--s2); font-size: .74rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+  .tag.bubbles { color: var(--gold); border-color: color-mix(in oklch, var(--gold) 45%, var(--line)); background: color-mix(in oklch, var(--gold) 8%, transparent); }
 
   /* ---------- Order ---------- */
   #commander { background: var(--paper-deep); border-top: 1px solid var(--line); padding: clamp(56px, 9vw, 104px) 0; scroll-margin-top: 72px; }
   .order-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: var(--s9); align-items: start; }
+  .order-intro { position: sticky; top: 96px; }
   .order-intro .section-head { margin-bottom: var(--s5); }
   .order-intro p { color: var(--ink-soft); max-width: 42ch; }
   .order-intro .reassure { margin-top: var(--s6); display: grid; gap: var(--s3); }
@@ -148,11 +152,16 @@
   .order-intro .reassure b { font-family: "Fraunces", serif; color: var(--garnet); font-weight: 600; }
 
   .qty-list { border: 1px solid var(--line); border-radius: var(--r); background: var(--paper); overflow: hidden; margin-bottom: var(--s5); }
-  .qty-row { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); padding: var(--s4); border-bottom: 1px solid var(--line); transition: background .2s var(--ease); }
+  .qty-row { padding: var(--s4); border-bottom: 1px solid var(--line); transition: background .2s var(--ease); }
   .qty-row:last-child { border-bottom: none; }
   .qty-row.has-qty { background: color-mix(in oklch, var(--garnet) 6%, var(--paper)); }
-  .qty-row .name { font-weight: 500; font-size: .98rem; }
+  .qty-row .name { font-weight: 500; font-size: .98rem; margin-bottom: var(--s2); }
   .qty-row .name span { display:block; color: var(--ink-soft); font-size: .8rem; font-weight: 400; margin-top: 1px; }
+  .fmt { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); padding: 6px 0; }
+  .fmt + .fmt { border-top: 1px dashed var(--line); }
+  .fmt .flabel { font-size: .9rem; }
+  .fmt .flabel b { font-weight: 600; }
+  .fmt .flabel span { color: var(--ink-soft); }
   .stepper { display: flex; align-items: center; }
   .stepper button {
     width: 40px; height: 40px; border: 1px solid var(--line); background: var(--paper-deep);
@@ -173,8 +182,10 @@
 
   form .row { display: flex; flex-direction: column; gap: var(--s2); margin-bottom: var(--s4); }
   form label { font-size: .88rem; font-weight: 600; }
-  form input { font-family: inherit; font-size: 1rem; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; transition: border-color .2s var(--ease), box-shadow .2s var(--ease); }
-  form input:focus { outline: none; border-color: var(--garnet); box-shadow: 0 0 0 3px color-mix(in oklch, var(--garnet) 18%, transparent); }
+  form label .opt { font-weight: 400; color: var(--ink-soft); }
+  form textarea { resize: vertical; }
+  form input, form textarea { font-family: inherit; font-size: 1rem; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; transition: border-color .2s var(--ease), box-shadow .2s var(--ease); }
+  form input:focus, form textarea:focus { outline: none; border-color: var(--garnet); box-shadow: 0 0 0 3px color-mix(in oklch, var(--garnet) 18%, transparent); }
   .submit-row { margin-top: var(--s5); }
   .submit-row .btn { width: 100%; padding: 16px; font-size: 1.05rem; }
   #order-status { margin-top: var(--s3); font-size: .95rem; min-height: 1.2em; }
@@ -200,6 +211,7 @@
   /* ---------- Responsive ---------- */
   @media (max-width: 860px) {
     .order-grid { grid-template-columns: 1fr; gap: var(--s7); }
+    .order-intro { position: static; }
   }
   @media (max-width: 700px) {
     nav.site { gap: var(--s4); }
@@ -238,9 +250,9 @@
 
 <section class="hero">
   <div class="wrap">
-    <p class="eyebrow anim d1">De retour pour l'été</p>
+    <p class="eyebrow anim d1">Sélection 2026</p>
     <h1 class="anim d2">Une petite sélection, choisie <em>avec soin.</em></h1>
-    <p class="lead anim d3">Des vins que nous aimons, partagés entre amis et en famille. Commande simple, à la caisse, livrée près de chez vous.</p>
+    <p class="lead anim d3">Des vins que nous aimons, partagés entre amis et en famille. Commande simple, au carton ou à la bouteille, livrée près de chez vous.</p>
     <div class="actions anim d4">
       <a href="#vins" class="btn">Découvrir la sélection</a>
       <a href="#commander" class="btn ghost">Passer commande</a>
@@ -254,7 +266,7 @@
       <path d="M8 4h24c0 11-5 19-12 20-7-1-12-9-12-20Z" fill="oklch(0.976 0.012 75)" fill-opacity="0.92"/>
       <path d="M20 24v22M11 52h18" stroke="oklch(0.976 0.012 75)" stroke-width="2.4" stroke-linecap="round" stroke-opacity="0.92"/>
     </svg>
-    <p><strong>Vin de Source</strong> revient pour vos tables d'été, tout en soutenant une œuvre philanthropique. Boire bien, et faire un peu de bien.</p>
+    <p><strong>Vin de Source</strong> revient pour vos tables de fin d'année, tout en soutenant une œuvre philanthropique. Boire bien, et faire un peu de bien.</p>
   </div>
 </aside>
 
@@ -262,7 +274,7 @@
   <div class="wrap">
     <div class="section-head reveal">
       <p class="eyebrow">La cave</p>
-      <h2>Cinq vins, du quotidien aux grandes occasions.</h2>
+      <h2>Sept vins, du quotidien aux grandes occasions.</h2>
     </div>
 
     <article class="wine reveal">
@@ -272,10 +284,10 @@
         <h3>Vin de Source</h3>
         <p class="sub">Fitou · Carignan, Grenache</p>
         <p class="desc">Notes fruitées et de pierre à fusil, signées par notre terroir de schistes et de calcaire. Le compagnon idéal de vos plats du quotidien.</p>
-        <p class="specs"><b>Garde&nbsp;:</b> jusqu'à 5 ans &nbsp;·&nbsp; <b>Caisse&nbsp;:</b> 6 bouteilles</p>
+        <p class="specs"><b>Garde&nbsp;:</b> jusqu'à 5 ans &nbsp;·&nbsp; <b>Carton&nbsp;:</b> 6 bouteilles</p>
         <p class="pairing">Facile à associer à vos plats de tous les jours.</p>
       </div>
-      <div class="price-col"><div class="price">50&nbsp;€<span class="per">la caisse de 6</span></div></div>
+      <div class="price-col"><div class="price">50&nbsp;€<span class="per">le carton de 6</span></div><span class="only">Au carton uniquement</span></div>
     </article>
 
     <article class="wine reveal">
@@ -288,45 +300,68 @@
         <p class="specs"><b>Garde&nbsp;:</b> jusqu'à 15 ans</p>
         <p class="pairing">Accompagne vos mets les plus fins.</p>
       </div>
-      <div class="price-col"><div class="price">90&nbsp;€<span class="per">la caisse</span></div></div>
+      <div class="price-col"><div class="price">90&nbsp;€<span class="per">le carton</span></div><span class="only">Au carton uniquement</span></div>
     </article>
 
     <article class="wine reveal">
       <div class="num">03</div>
       <div class="meta">
-        <div class="tags"><span class="tag red">Rouge</span><span class="tag">Saint-Émilion</span><span class="tag">2020</span></div>
-        <h3>Château Billeron Bouquey, Cuvée Calice</h3>
-        <p class="sub">Saint-Émilion · 80% Merlot, 20% Cabernet Franc</p>
-        <p class="desc">Robe rubis, arômes de fruits rouges (cerise) et notes légèrement toastées. Tanins soyeux et belle amplitude&nbsp;: le mariage de la finesse du terroir et du fruité du merlot.</p>
-        <p class="pairing">Superbe sur un carré d'agneau rôti aux herbes, un magret sauce aux cèpes, une entrecôte bordelaise, ou un vieux comté et un Saint-Nectaire fermier.</p>
+        <div class="tags"><span class="tag red">Rouge</span><span class="tag">Saint-Estèphe</span><span class="tag">Bordeaux</span></div>
+        <h3>Château Petit Bocq</h3>
+        <p class="sub">AOC Saint-Estèphe, Cru Bourgeois · Merlot, Cabernet Sauvignon, Cabernet Franc</p>
+        <p class="desc">Un domaine familial niché dans le village de Pez, au cœur de Saint-Estèphe. Un Médoc charmeur, porté par le merlot&nbsp;: fruit noir généreux, tanins fondus, belle tenue.</p>
+        <p class="pairing">Sur une côte de bœuf, un gigot d'agneau ou un plateau de fromages affinés.</p>
       </div>
-      <div class="price-col"><div class="price">99&nbsp;€<span class="per">la caisse</span></div></div>
+      <div class="price-col"><div class="price">29&nbsp;€<span class="per">la bouteille</span></div><span class="alt">174&nbsp;€ le carton de 6</span></div>
     </article>
 
     <article class="wine reveal">
       <div class="num">04</div>
       <div class="meta">
-        <div class="tags"><span class="tag white">Blanc</span><span class="tag">AOP Saint-Chinian</span><span class="tag">2024</span></div>
-        <h3>Le Petit Paradis</h3>
-        <p class="sub">AOP Saint-Chinian · 50% Grenache blanc, 30% Marsanne, 20% Vermentino</p>
-        <p class="desc">Une rareté&nbsp;: à peine 5% de blancs dans l'appellation. Robe brillante aux reflets dorés, nez de fruits à chair blanche et de coing confit, bouche intense et suave à la finale épicée.</p>
-        <p class="pairing">Parfait dès l'apéritif, puis sur un poisson au four ou un waterzooi de volaille.</p>
+        <div class="tags"><span class="tag red">Rouge</span><span class="tag">Barolo</span><span class="tag">Piémont</span></div>
+        <h3>Barolo 7 Cascine</h3>
+        <p class="sub">Barolo DOCG, Langhe · 100% Nebbiolo</p>
+        <p class="desc">«&nbsp;Sept fermes&nbsp;»&nbsp;: un Barolo d'assemblage né de plusieurs belles parcelles des Langhe, à la façon traditionnelle. Le Nebbiolo dans toute sa noblesse&nbsp;: rose fanée, cerise, épices, tanins fermes.</p>
+        <p class="pairing">Un risotto aux truffes ou aux cèpes, un brasato al Barolo, un gibier.</p>
       </div>
-      <div class="price-col"><div class="price">60&nbsp;€<span class="per">la caisse</span></div></div>
+      <div class="price-col"><div class="price">33&nbsp;€<span class="per">la bouteille</span></div><span class="alt">198&nbsp;€ le carton de 6</span></div>
     </article>
 
     <article class="wine reveal">
       <div class="num">05</div>
       <div class="meta">
-        <div class="tags"><span class="tag rose">Rosé</span><span class="tag">IGP Pays d'Oc</span><span class="tag">2025</span></div>
-        <h3>Esprit de Massia</h3>
-        <p class="sub">IGP Pays d'Oc · Grenache gris, Cinsault, Grenache noir</p>
-        <p class="desc">Robe délicatement pâle, arômes de petits fruits rouges croquants, de pêche blanche, parfois de pamplemousse. Frais et léger, comme on les aime.</p>
-        <p class="pairing">Idéal sur une salade de la mer, un carpaccio de dorade, des tapas méditerranéennes, ou de simples grillades de poisson et de volaille.</p>
+        <div class="tags"><span class="tag white">Blanc</span><span class="tag">Sancerre</span><span class="tag">Loire</span></div>
+        <h3>Domaine La Gémière</h3>
+        <p class="sub">AOC Sancerre · 100% Sauvignon blanc</p>
+        <p class="desc">Domaine familial des Millet à Crézancy-en-Sancerre, transmis de génération en génération. Un Sancerre net et lumineux&nbsp;: fleurs blanches, agrumes, une bouche fraîche et tendue.</p>
+        <p class="pairing">Un crottin de Chavignol, des huîtres, un poisson grillé.</p>
       </div>
-      <div class="price-col"><div class="price">48&nbsp;€<span class="per">la caisse</span></div></div>
+      <div class="price-col"><div class="price">22,50&nbsp;€<span class="per">la bouteille</span></div><span class="alt">135&nbsp;€ le carton de 6</span></div>
     </article>
 
+    <article class="wine reveal">
+      <div class="num">06</div>
+      <div class="meta">
+        <div class="tags"><span class="tag white">Blanc</span><span class="tag">Mâcon-Fuissé</span><span class="tag">Bourgogne</span></div>
+        <h3>Mâcon-Fuissé, Pierre Vessigaud</h3>
+        <p class="sub">AOC Mâcon-Fuissé · 100% Chardonnay</p>
+        <p class="desc">Cinq générations de vignerons au hameau de Pouilly, au cœur du Pouilly-Fuissé, vendanges à la main. Un chardonnay précis et minéral, aux notes de fruits blancs et d'agrumes.</p>
+        <p class="pairing">Des Saint-Jacques, une volaille de Bresse rôtie, un risotto aux asperges.</p>
+      </div>
+      <div class="price-col"><div class="price">17,85&nbsp;€<span class="per">la bouteille</span></div><span class="alt">107&nbsp;€ le carton de 6</span></div>
+    </article>
+
+    <article class="wine reveal">
+      <div class="num">07</div>
+      <div class="meta">
+        <div class="tags"><span class="tag bubbles">Champagne</span><span class="tag">Blanc de Blancs</span><span class="tag">Brut</span></div>
+        <h3>Vollereaux Blanc de Blancs</h3>
+        <p class="sub">AOC Champagne · 100% Chardonnay</p>
+        <p class="desc">Une maison familiale de Pierry, près d'Épernay, attachée à la vigne depuis 1805. Bulles fines, citron, pomme verte et poire fraîche&nbsp;: un champagne vif et élégant.</p>
+        <p class="pairing">À l'apéritif, puis sur des fruits de mer, un saumon fumé ou un fromage crémeux.</p>
+      </div>
+      <div class="price-col"><div class="price">35&nbsp;€<span class="per">la bouteille</span></div><span class="alt">210&nbsp;€ le carton de 6</span></div>
+    </article>
   </div>
 </section>
 
@@ -338,9 +373,9 @@
           <p class="eyebrow">À vous de jouer</p>
           <h2>Passer commande.</h2>
         </div>
-        <p>Choisissez vos caisses, laissez-nous votre nom et votre email, et nous revenons vers vous pour la livraison et le règlement. Entre amis, tout simplement.</p>
+        <p>Choisissez vos cartons ou vos bouteilles, laissez-nous votre nom et votre email, et nous revenons vers vous pour la livraison et le règlement. Entre amis, tout simplement.</p>
         <div class="reassure">
-          <div><b>01</b><span>Vous choisissez vos caisses ci-contre.</span></div>
+          <div><b>01</b><span>Vous choisissez au carton de 6 ou à la bouteille (selon le vin).</span></div>
           <div><b>02</b><span>Nous vous recontactons pour la livraison.</span></div>
           <div><b>03</b><span>Le règlement se fait de la main à la main.</span></div>
         </div>
@@ -361,6 +396,14 @@
         <div class="row">
           <label for="email">Email</label>
           <input type="email" id="email" name="email" required autocomplete="email" />
+        </div>
+        <div class="row">
+          <label for="phone">Téléphone <span class="opt">(facultatif)</span></label>
+          <input type="tel" id="phone" name="phone" autocomplete="tel" />
+        </div>
+        <div class="row">
+          <label for="message">Un mot pour nous <span class="opt">(facultatif)</span></label>
+          <textarea id="message" name="message" rows="3" placeholder="Disponibilités pour la livraison, précisions…"></textarea>
         </div>
 
         <div class="submit-row">
@@ -390,49 +433,84 @@
    ============================================================ */
 const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwaNdSY8N6Gv4b6-O5RF7NysCq6Tz2bEG8PQKw6T9dmAQvZRBX8PTncVnJAcIPdA-uv/exec";
 
+/* Catalogue V2026 — prix en euros.
+   carton = prix du carton de 6 · bottle = prix à la bouteille (null = carton uniquement). */
 const WINES = [
-  { id: "vin-de-source", name: "Vin de Source", detail: "Fitou rouge · caisse de 6", price: 50 },
-  { id: "pipelettes",    name: "Les Pipelettes", detail: "AOP Fitou rouge", price: 90 },
-  { id: "calice",        name: "Château Billeron (Calice 2020)", detail: "Saint-Émilion rouge", price: 99 },
-  { id: "petit-paradis", name: "Le Petit Paradis", detail: "AOP Saint-Chinian blanc 2024", price: 60 },
-  { id: "esprit-massia", name: "Esprit de Massia", detail: "IGP Pays d'Oc rosé 2025", price: 48 },
+  { id: "vin-de-source", name: "Vin de Source",                  detail: "Fitou rouge",          carton: 50,  bottle: null  },
+  { id: "pipelettes",    name: "Les Pipelettes",                 detail: "AOP Fitou rouge",      carton: 90,  bottle: null  },
+  { id: "petit-bocq",    name: "Château Petit Bocq",             detail: "Saint-Estèphe rouge",  carton: 174, bottle: 29    },
+  { id: "barolo",        name: "Barolo 7 Cascine",               detail: "Piémont rouge",        carton: 198, bottle: 33    },
+  { id: "la-gemiere",    name: "Domaine La Gémière",             detail: "Sancerre blanc",       carton: 135, bottle: 22.5  },
+  { id: "vessigaud",     name: "Mâcon-Fuissé, Pierre Vessigaud", detail: "Bourgogne blanc",      carton: 107, bottle: 17.85 },
+  { id: "vollereaux",    name: "Vollereaux Blanc de Blancs",     detail: "Champagne",            carton: 210, bottle: 35    },
 ];
+const FORMATS = [
+  { key: "carton",    label: "Carton de 6", unit: "carton" },
+  { key: "bouteille", label: "Bouteille",   unit: "bouteille" },
+];
+function priceOf(w, f){ return f === "carton" ? w.carton : w.bottle; }
 
 const qtyList = document.getElementById("qty-list");
 const totalEl = document.getElementById("total");
 const mctaTotalEl = document.getElementById("mcta-total");
-const qty = {};
+const qty = {};   // qty["petit-bocq:carton"] = 2
+
+function fmt(n){
+  const cents = Math.round(n * 100);
+  return (cents / 100).toLocaleString("fr-FR", { minimumFractionDigits: cents % 100 ? 2 : 0, maximumFractionDigits: 2 }) + " €";
+}
 
 WINES.forEach(w => {
-  qty[w.id] = 0;
   const row = document.createElement("div");
   row.className = "qty-row";
-  row.dataset.id = w.id;
-  row.innerHTML =
-    '<div class="name">' + w.name + '<span>' + w.detail + ' · ' + w.price + ' €</span></div>' +
-    '<div class="stepper">' +
-      '<button type="button" aria-label="Retirer une caisse de ' + w.name + '" data-act="dec" data-id="' + w.id + '">–</button>' +
-      '<input type="text" inputmode="numeric" value="0" data-id="' + w.id + '" aria-label="Quantité ' + w.name + '" />' +
-      '<button type="button" aria-label="Ajouter une caisse de ' + w.name + '" data-act="inc" data-id="' + w.id + '">+</button>' +
-    '</div>';
+  row.dataset.wine = w.id;
+  let html = '<div class="name">' + w.name + '<span>' + w.detail + (w.bottle == null ? ' · au carton uniquement' : '') + '</span></div>';
+  FORMATS.forEach(f => {
+    const p = priceOf(w, f.key);
+    if (p == null) return;
+    const k = w.id + ":" + f.key;
+    qty[k] = 0;
+    html +=
+      '<div class="fmt">' +
+        '<span class="flabel"><b>' + f.label + '</b> <span>· ' + fmt(p) + '</span></span>' +
+        '<div class="stepper">' +
+          '<button type="button" aria-label="Retirer un ' + f.unit + ' de ' + w.name + '" data-act="dec" data-k="' + k + '">–</button>' +
+          '<input type="text" inputmode="numeric" value="0" data-k="' + k + '" aria-label="' + f.label + ', ' + w.name + '" />' +
+          '<button type="button" aria-label="Ajouter un ' + f.unit + ' de ' + w.name + '" data-act="inc" data-k="' + k + '">+</button>' +
+        '</div>' +
+      '</div>';
+  });
+  row.innerHTML = html;
   qtyList.appendChild(row);
 });
 
-function fmt(n){ return n.toLocaleString("fr-FR") + " €"; }
+/* Lignes de commande, dans l'ordre du catalogue. Calcul en centimes pour éviter les arrondis. */
+function orderItems(){
+  const items = [];
+  WINES.forEach(w => FORMATS.forEach(f => {
+    const k = w.id + ":" + f.key, q = qty[k] || 0;
+    if (q > 0){
+      const unit = priceOf(w, f.key);
+      items.push({ id: w.id, name: w.name, format: f.key, qty: q, unit: unit, subtotal: Math.round(q * unit * 100) / 100 });
+    }
+  }));
+  return items;
+}
 function recalc(){
-  let t = 0;
-  WINES.forEach(w => t += qty[w.id] * w.price);
+  const cents = orderItems().reduce((s, it) => s + Math.round(it.subtotal * 100), 0);
+  const t = cents / 100;
   totalEl.innerHTML = fmt(t);
   if (mctaTotalEl) mctaTotalEl.innerHTML = fmt(t) + '<small>Total estimé</small>';
   return t;
 }
-function setQty(id, val, bump){
+function setQty(k, val, bump){
   val = Math.max(0, Math.min(99, parseInt(val, 10) || 0));
-  qty[id] = val;
-  const input = qtyList.querySelector('input[data-id="' + id + '"]');
+  qty[k] = val;
+  const input = qtyList.querySelector('input[data-k="' + k + '"]');
   input.value = val;
-  const row = qtyList.querySelector('.qty-row[data-id="' + id + '"]');
-  if (row) row.classList.toggle("has-qty", val > 0);
+  const wineId = k.split(":")[0];
+  const row = qtyList.querySelector('.qty-row[data-wine="' + wineId + '"]');
+  if (row) row.classList.toggle("has-qty", Object.keys(qty).some(x => x.startsWith(wineId + ":") && qty[x] > 0));
   if (bump) { input.classList.remove("bump"); void input.offsetWidth; input.classList.add("bump"); }
   recalc();
 }
@@ -440,16 +518,16 @@ function setQty(id, val, bump){
 qtyList.addEventListener("click", e => {
   const b = e.target.closest("button[data-act]");
   if (!b) return;
-  const id = b.dataset.id;
-  setQty(id, qty[id] + (b.dataset.act === "inc" ? 1 : -1), true);
+  const k = b.dataset.k;
+  setQty(k, qty[k] + (b.dataset.act === "inc" ? 1 : -1), true);
 });
 qtyList.addEventListener("input", e => {
-  if (e.target.matches('input[data-id]')) setQty(e.target.dataset.id, e.target.value, false);
+  if (e.target.matches('input[data-k]')) setQty(e.target.dataset.k, e.target.value, false);
 });
 
-function buildOrderLines(){
-  return WINES.filter(w => qty[w.id] > 0)
-    .map(w => qty[w.id] + " × " + w.name + " (" + (qty[w.id] * w.price) + " €)");
+function lineLabel(it){
+  const unit = it.format === "carton" ? (it.qty > 1 ? "cartons" : "carton") : (it.qty > 1 ? "bouteilles" : "bouteille");
+  return it.qty + " " + unit + " · " + it.name;
 }
 
 const form = document.getElementById("order-form");
@@ -459,11 +537,11 @@ const submitBtn = document.getElementById("submit-btn");
 form.addEventListener("submit", async e => {
   e.preventDefault();
   const total = recalc();
-  const lines = buildOrderLines();
+  const items = orderItems();
   statusEl.className = "";
-  if (lines.length === 0){
+  if (items.length === 0){
     statusEl.className = "err";
-    statusEl.textContent = "Ajoutez au moins une caisse avant d'envoyer.";
+    statusEl.textContent = "Ajoutez au moins un carton ou une bouteille avant d'envoyer.";
     return;
   }
   if (!form.name.value.trim() || !form.email.value.trim()){
@@ -473,22 +551,23 @@ form.addEventListener("submit", async e => {
   }
 
   const data = {
-    date: new Date().toLocaleString("fr-FR"),
+    version: "V2026",
+    date: new Date().toLocaleString("fr-BE"),
     name: form.name.value.trim(),
     email: form.email.value.trim(),
-    qty: {},          // quantité par vin, dans l'ordre de WINES
+    phone: form.phone.value.trim(),
+    message: form.message.value.trim(),
+    items: items,                                                   // une entrée par vin et par format
+    order: items.map(it => lineLabel(it) + " (" + fmt(it.subtotal) + ")").join("\n"),
     total: total
   };
-  WINES.forEach(w => data.qty[w.id] = qty[w.id]);
 
-  // --- Sans webhook, on ne fait rien (les commandes vont uniquement au Google Sheet) ---
   if (!SHEET_WEBHOOK_URL){
     statusEl.className = "err";
     statusEl.textContent = "La prise de commande en ligne s'active dans un instant. Merci de réessayer un peu plus tard.";
     return;
   }
 
-  // --- Envoi vers le Google Sheet ---
   submitBtn.disabled = true;
   submitBtn.textContent = "Envoi…";
   try {
@@ -501,7 +580,11 @@ form.addEventListener("submit", async e => {
     statusEl.className = "ok";
     statusEl.textContent = "Commande envoyée, redirection…";
     try {
-      sessionStorage.setItem("vds_order", JSON.stringify({ name: data.name, lines: lines, total: total }));
+      sessionStorage.setItem("vds_order", JSON.stringify({
+        name: data.name,
+        items: items.map(it => ({ label: lineLabel(it), amount: it.subtotal })),
+        total: total
+      }));
     } catch (e) { /* sessionStorage indisponible : on redirige quand même */ }
     window.location.href = "merci.html";
     return;

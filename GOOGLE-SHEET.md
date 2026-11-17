@@ -1,68 +1,55 @@
-# Brancher les commandes sur Google Sheets — 5 minutes
+# Commandes → Google Sheets (V2026) · 5 minutes
 
-Le site marche déjà sans rien faire : le bouton ouvre un email pré-rempli.
-Ces étapes ajoutent en plus un enregistrement automatique dans une feuille
-Google Sheets **et** un email d'alerte à chaque commande.
+Chaque commande passée sur le site arrive dans une feuille Google et déclenche
+un email d'alerte. La V2026 gère la vente **au carton de 6 et à la bouteille**.
 
-## 1. Créer la feuille
-Va sur **https://sheets.new** (crée une feuille vierge).
-Pas besoin de mettre les en-têtes : le script les crée tout seul.
-Donne-lui un nom, par ex. « Commandes Vin de Source ».
+## La feuille
 
-## 2. Ouvrir l'éditeur de script
-Dans la feuille : menu **Extensions > Apps Script**.
+« **Vin de Source · Commandes V2026** » (dans le Drive de raph@dropno.eu) contient trois onglets :
 
-## 3. Coller le script
-Efface le contenu par défaut, puis colle tout le contenu du fichier
-**`Code.gs`** (fourni à côté de ce guide).
-Vérifie en haut que `NOTIFY_EMAIL` est bien ton adresse, puis enregistre
-(icône disquette ou Cmd+S).
+| Onglet | Contenu |
+|---|---|
+| **Commandes** | une ligne par commande : N° (2026-001…), date, client, texte de la commande, total, **Statut** (« À traiter » au départ, à faire évoluer à la main : payé, livré…) |
+| **Détail** | une ligne par vin et par format (carton / bouteille) : idéal pour un tableau croisé « combien commander chez chaque producteur » |
+| **Catalogue** | les prix 2026, pour référence. Les prix affichés sur le site se changent dans `index.html` (tableau `WINES`). |
 
-## 4. Déployer en application web
-- Clique **Déployer > Nouveau déploiement**.
-- Roue dentée > choisis **Application Web**.
-- *Description* : « commandes site ».
-- *Exécuter en tant que* : **Moi**.
-- *Qui a accès* : **Tout le monde**.
-- Clique **Déployer**.
-- Google demande une autorisation : **Autoriser l'accès** > choisis ton
-  compte > (si l'écran « Google n'a pas validé cette appli » apparaît :
-  *Paramètres avancés* > *Accéder à … (non sécurisé)* — c'est ton propre
-  script, sans risque).
-- **Copie l'URL de l'application web** (elle se termine par `/exec`).
+Si un onglet manque, le script le recrée avec ses en-têtes.
 
-Tu peux vérifier : colle cette URL dans un navigateur, tu dois voir
-`{"status":"ok"}`.
+## 1. Coller le script
+Dans la feuille : **Extensions > Apps Script**. Efface le contenu par défaut,
+colle tout le fichier **`Code.gs`**, vérifie `NOTIFY_EMAIL`, puis enregistre.
 
-## 5. Brancher le site
-Ouvre `index.html`, repère tout en haut du `<script>` :
+## 2. Déployer en application web
+- **Déployer > Nouveau déploiement** > roue dentée > **Application Web**.
+- *Exécuter en tant que* : **Moi** · *Qui a accès* : **Tout le monde**.
+- **Déployer**, puis autoriser (écran « Google n'a pas validé cette appli » :
+  *Paramètres avancés* > *Accéder à … (non sécurisé)*, c'est ton propre script).
+- **Copie l'URL** (elle se termine par `/exec`). Ouverte dans un navigateur,
+  elle doit afficher `{"status":"ok","version":"V2026"}`.
 
-```javascript
-const SHEET_WEBHOOK_URL = "";
-```
-
-et colle ton URL :
-
-```javascript
-const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfy.../exec";
-```
-
-Puis publie la mise à jour :
+## 3. Brancher le site
+Dans `index.html`, remplace l'URL de `SHEET_WEBHOOK_URL` par la nouvelle, puis :
 
 ```bash
-cd "/Users/raphael/Documents/Claude/Projects/Projet Vin /Projet Vin"
-git add index.html
-git commit -m "Branche les commandes sur Google Sheets"
-git push
+git add index.html && git commit -m "Branche le Sheet V2026" && git push
 ```
 
-Une minute plus tard, chaque commande passée sur le site arrivera
-automatiquement dans la feuille, et tu recevras un email.
+Tant que l'ancienne URL est en place, les commandes continuent d'arriver dans
+l'ancienne feuille (colonne « order » remplie avec le détail), rien ne se perd.
 
----
+## Ce que le site envoie
+```json
+{
+  "version": "V2026", "date": "...", "name": "...", "email": "...",
+  "phone": "...", "message": "...",
+  "items": [{ "id": "petit-bocq", "name": "Château Petit Bocq",
+              "format": "bouteille", "qty": 3, "unit": 29, "subtotal": 87 }],
+  "order": "3 bouteilles · Château Petit Bocq (87 €)",
+  "total": 87
+}
+```
+Le script recalcule le total à partir des lignes.
 
-### Astuce test
-Sur le site en ligne, ajoute une caisse, remplis tes coordonnées et envoie :
-une ligne doit apparaître dans la feuille et un email arriver.
-Si rien n'arrive, revérifie que « Qui a accès » est bien sur **Tout le monde**
-et que l'URL collée se termine par `/exec`.
+### Test
+Sur le site, ajoute un carton et une bouteille, remplis tes coordonnées et
+envoie : une ligne dans **Commandes**, deux dans **Détail**, et un email.
