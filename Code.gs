@@ -1,68 +1,90 @@
 /**
- * Vin de Source — réception des commandes du site dans Google Sheets (V2026).
+ * Vin de Source — réception des commandes du site dans Google Sheets (2026-v2).
  *
- * Onglets (créés automatiquement s'ils manquent) :
- *   - « Commandes » : une ligne par commande (client, total, statut à suivre).
- *   - « Détail »    : une ligne par vin et par format (carton / bouteille),
- *                     pratique pour les totaux à commander chez les producteurs.
+ * Une ligne par commande : date, nom, email, téléphone, message,
+ * puis une colonne par vin et par format (cartons / bouteilles), et le total.
+ * Auto-correcteur : remet la ligne d'en-têtes d'aplomb si besoin.
+ * Email récapitulatif à chaque commande.
  *
- * Chaque commande reçoit un numéro (2026-001, 2026-002…) et déclenche un email.
- * Installation : voir GOOGLE-SHEET.md.
+ * POUR TESTER SANS LE SITE : dans la barre du haut, sélectionne la fonction
+ * "testCommande" puis clique "Exécuter". Une ligne TEST doit apparaître dans
+ * la feuille (aucun email n'est envoyé pour ce test).
+ *
+ * APRÈS TOUTE MODIF DU CODE : Déployer > Gérer les déploiements >
+ * (crayon) Modifier > Version : NOUVELLE VERSION > Déployer. L'URL ne change pas.
  */
 
-// Adresses qui reçoivent l'alerte de commande (séparées par des virgules).
-var NOTIFY_EMAIL = "jhcauwen@yp5.be,jeanpierrekamp20@gmail.com,naim.rahal@gmail.com";
+// Adresse(s) qui reçoivent l'alerte de commande (séparées par des virgules).
+var NOTIFY_EMAIL = "rhombroeck@gmail.com";
 
-var SAISON = "2026";
+// Nom de l'onglet où écrire les commandes (sinon le premier onglet).
+var SHEET_NAME = "Commande";
 
-var TAB_COMMANDES = "Commandes";
-var TAB_DETAIL = "Détail";
+// Colonnes vins : id du site + format -> titre de colonne. Même ordre que sur le site.
+var WINE_COLUMNS = [
+  ["vin-de-source:carton",  "Vin de Source (cartons)"],
+  ["pipelettes:carton",     "Les Pipelettes (cartons)"],
+  ["petit-bocq:carton",     "Petit Bocq (cartons)"],
+  ["petit-bocq:bouteille",  "Petit Bocq (bouteilles)"],
+  ["barolo:carton",         "Barolo 7 Cascine (cartons)"],
+  ["barolo:bouteille",      "Barolo 7 Cascine (bouteilles)"],
+  ["la-gemiere:carton",     "La Gémière (cartons)"],
+  ["la-gemiere:bouteille",  "La Gémière (bouteilles)"],
+  ["vessigaud:carton",      "Mâcon Vessigaud (cartons)"],
+  ["vessigaud:bouteille",   "Mâcon Vessigaud (bouteilles)"],
+  ["vollereaux:carton",     "Vollereaux (cartons)"],
+  ["vollereaux:bouteille",  "Vollereaux (bouteilles)"]
+];
 
-var HEADERS_COMMANDES = ["N°", "Date", "Nom", "Email", "Téléphone", "Message", "Commande", "Total (€)", "Statut"];
-var HEADERS_DETAIL = ["N°", "Date", "Nom", "Vin", "Format", "Quantité", "Prix unitaire (€)", "Sous-total (€)"];
+var HEADERS = ["date", "name", "email", "téléphone", "message"]
+  .concat(WINE_COLUMNS.map(function (c) { return c[1]; }))
+  .concat(["total"]);
 
-function doPost(e) {
+function getSheet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  return ss.getSheetByName(SHEET_NAME) || ss.getSheets()[0];
+}
+
+// Remet la ligne 1 d'aplomb si elle ne correspond pas aux colonnes attendues.
+function ensureHeaders(sheet) {
+  var range = sheet.getRange(1, 1, 1, HEADERS.length);
+  var current = range.getValues()[0].map(String);
+  if (current.join("|") !== HEADERS.join("|")) {
+    range.setValues([HEADERS]).setFontWeight("bold");
+    sheet.setFrozenRows(1);
+  }
+}
+
+function writeOrder(d, sendMail) {
   var lock = LockService.getScriptLock();
-  lock.waitLock(20000); // deux commandes simultanées ne prennent pas le même numéro
+  lock.waitLock(20000);
   try {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var commandes = getTab_(ss, TAB_COMMANDES, HEADERS_COMMANDES);
-    var detail = getTab_(ss, TAB_DETAIL, HEADERS_DETAIL);
+    var sheet = getSheet();
+    ensureHeaders(sheet);
 
-    var d = JSON.parse(e.postData.contents);
-    var items = Array.isArray(d.items) ? d.items : [];
+    // Quantités par vin/format, total recalculé à partir des lignes.
+    var qty = {}, cents = 0;
+    (Array.isArray(d.items) ? d.items : []).forEach(function (it) {
+      var key = it.id + ":" + it.format;
+      var q = Number(it.qty) || 0;
+      qty[key] = (qty[key] || 0) + q;
+      cents += Math.round(q * Number(it.unit) * 100);
+    });
+    var total = cents / 100;
 
-    // Total recalculé côté serveur à partir des lignes.
-    var cents = 0;
-    items.forEach(function (it) { cents += Math.round(Number(it.qty) * Number(it.unit) * 100); });
-    var total = items.length ? cents / 100 : Number(d.total) || 0;
+    var row = [new Date(), safe_(d.name), safe_(d.email), safe_(d.phone), safe_(d.message)]
+      .concat(WINE_COLUMNS.map(function (c) { return qty[c[0]] || 0; }))
+      .concat([total]);
+    sheet.appendRow(row);
 
-    var num = SAISON + "-" + ("00" + commandes.getLastRow()).slice(-3); // la ligne 1 = en-têtes
-    var date = new Date();
-
-    commandes.appendRow([
-      num, date, safe_(d.name), safe_(d.email), safe_(d.phone), safe_(d.message),
-      safe_(d.order), total, "À traiter"
-    ]);
-
-    if (items.length) {
-      var rows = items.map(function (it) {
-        var q = Number(it.qty) || 0, u = Number(it.unit) || 0;
-        return [num, date, safe_(d.name), safe_(it.name),
-                it.format === "bouteille" ? "Bouteille" : "Carton de 6",
-                q, u, Math.round(q * u * 100) / 100];
-      });
-      detail.getRange(detail.getLastRow() + 1, 1, rows.length, HEADERS_DETAIL.length).setValues(rows);
-    }
-
-    try {
-      if (NOTIFY_EMAIL) {
+    if (sendMail && NOTIFY_EMAIL) {
+      try {
         MailApp.sendEmail({
           to: NOTIFY_EMAIL,
           replyTo: d.email || undefined,
-          subject: "Commande " + num + " · Vin de Source · " + (d.name || "client"),
+          subject: "Nouvelle commande Vin de Source — " + (d.name || "client"),
           body:
-            "Nouvelle commande " + num + "\n\n" +
+            "Nouvelle commande reçue :\n\n" +
             "Nom : " + d.name + "\n" +
             "Email : " + d.email + "\n" +
             "Téléphone : " + (d.phone || "-") + "\n" +
@@ -70,32 +92,38 @@ function doPost(e) {
             (d.order || "") + "\n\n" +
             "Total estimé : " + total.toFixed(2).replace(".", ",") + " €\n"
         });
-      }
-    } catch (mailErr) { /* l'enregistrement reste fait même si l'email échoue */ }
-
-    return json_({ ok: true, num: num });
-  } catch (err) {
-    return json_({ ok: false, error: String(err) });
+      } catch (mailErr) { /* l'enregistrement reste fait même si l'email échoue */ }
+    }
+    return total;
   } finally {
     lock.releaseLock();
   }
 }
 
-// Ouvre l'URL /exec dans un navigateur : doit afficher {"status":"ok","version":"V2026"}.
-function doGet() {
-  return json_({ status: "ok", version: "V" + SAISON });
+function doPost(e) {
+  try {
+    var d = JSON.parse(e.postData.contents);
+    var total = writeOrder(d, true);
+    return json_({ ok: true, total: total });
+  } catch (err) {
+    return json_({ ok: false, error: String(err) });
+  }
 }
 
-/* ---------- outils ---------- */
+// Ouvre l'URL /exec dans un navigateur : doit afficher {"status":"ok","version":"2026-v2"}.
+function doGet() {
+  return json_({ status: "ok", version: "2026-v2" });
+}
 
-function getTab_(ss, name, headers) {
-  var sh = ss.getSheetByName(name) || ss.insertSheet(name);
-  if (sh.getLastRow() === 0) {
-    sh.appendRow(headers);
-    sh.getRange(1, 1, 1, headers.length).setFontWeight("bold").setBackground("#f3ece2");
-    sh.setFrozenRows(1);
-  }
-  return sh;
+// Test sans le site : ajoute une ligne TEST (pas d'email).
+function testCommande() {
+  writeOrder({
+    name: "TEST", email: "test@example.com", phone: "", message: "ligne de test",
+    items: [
+      { id: "vin-de-source", format: "carton", qty: 1, unit: 50 },
+      { id: "vessigaud", format: "bouteille", qty: 3, unit: 17.85 }
+    ]
+  }, false);
 }
 
 // Empêche qu'un texte saisi sur le site soit interprété comme une formule.

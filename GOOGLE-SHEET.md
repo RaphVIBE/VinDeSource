@@ -1,55 +1,37 @@
-# Commandes → Google Sheets (V2026) · 5 minutes
+# Commandes → Google Sheets (2026-v2)
 
-Chaque commande passée sur le site arrive dans une feuille Google et déclenche
-un email d'alerte. La V2026 gère la vente **au carton de 6 et à la bouteille**.
+Chaque commande passée sur le site arrive dans la feuille
+**« Vin de source 2026-v2 »** (Drive de rhombroeck@gmail.com) et déclenche
+un email d'alerte à rhombroeck@gmail.com.
 
 ## La feuille
+Onglet **Commande**, une ligne par commande :
 
-« **Vin de Source · Commandes V2026** » (dans le Drive de raph@dropno.eu) contient trois onglets :
+`date · name · email · téléphone · message · une colonne par vin et par format · total`
 
-| Onglet | Contenu |
-|---|---|
-| **Commandes** | une ligne par commande : N° (2026-001…), date, client, texte de la commande, total, **Statut** (« À traiter » au départ, à faire évoluer à la main : payé, livré…) |
-| **Détail** | une ligne par vin et par format (carton / bouteille) : idéal pour un tableau croisé « combien commander chez chaque producteur » |
-| **Catalogue** | les prix 2026, pour référence. Les prix affichés sur le site se changent dans `index.html` (tableau `WINES`). |
+Les vins vendus à l'unité ont deux colonnes : `(cartons)` et `(bouteilles)`.
+Vin de Source et Les Pipelettes n'ont qu'une colonne `(cartons)`.
+Le script remet la ligne d'en-têtes d'aplomb tout seul si elle est abîmée.
 
-Si un onglet manque, le script le recrée avec ses en-têtes.
+L'ancienne feuille « Vin de source 2026 » garde les commandes de l'été.
 
-## 1. Coller le script
-Dans la feuille : **Extensions > Apps Script**. Efface le contenu par défaut,
-colle tout le fichier **`Code.gs`**, vérifie `NOTIFY_EMAIL`, puis enregistre.
+## Le script
+`Code.gs` est la copie du script lié à la feuille (Extensions > Apps Script).
+Déploiement : application Web, exécutée en tant que rhombroeck@gmail.com,
+accès « Tout le monde ». L'URL est dans `index.html` (`SHEET_WEBHOOK_URL`).
 
-## 2. Déployer en application web
-- **Déployer > Nouveau déploiement** > roue dentée > **Application Web**.
-- *Exécuter en tant que* : **Moi** · *Qui a accès* : **Tout le monde**.
-- **Déployer**, puis autoriser (écran « Google n'a pas validé cette appli » :
-  *Paramètres avancés* > *Accéder à … (non sécurisé)*, c'est ton propre script).
-- **Copie l'URL** (elle se termine par `/exec`). Ouverte dans un navigateur,
-  elle doit afficher `{"status":"ok","version":"V2026"}`.
+Ouvrir l'URL `/exec` dans un navigateur doit afficher
+`{"status":"ok","version":"2026-v2"}`.
 
-## 3. Brancher le site
-Dans `index.html`, remplace l'URL de `SHEET_WEBHOOK_URL` par la nouvelle, puis :
+### Tester sans le site
+Dans Apps Script, choisis la fonction `testCommande` et clique **Exécuter** :
+une ligne TEST apparaît (pas d'email).
 
-```bash
-git add index.html && git commit -m "Branche le Sheet V2026" && git push
-```
+### Après une modification du code
+**Déployer > Gérer les déploiements > (crayon) > Version : Nouvelle version >
+Déployer.** L'URL ne change pas.
 
-Tant que l'ancienne URL est en place, les commandes continuent d'arriver dans
-l'ancienne feuille (colonne « order » remplie avec le détail), rien ne se perd.
-
-## Ce que le site envoie
-```json
-{
-  "version": "V2026", "date": "...", "name": "...", "email": "...",
-  "phone": "...", "message": "...",
-  "items": [{ "id": "petit-bocq", "name": "Château Petit Bocq",
-              "format": "bouteille", "qty": 3, "unit": 29, "subtotal": 87 }],
-  "order": "3 bouteilles · Château Petit Bocq (87 €)",
-  "total": 87
-}
-```
-Le script recalcule le total à partir des lignes.
-
-### Test
-Sur le site, ajoute un carton et une bouteille, remplis tes coordonnées et
-envoie : une ligne dans **Commandes**, deux dans **Détail**, et un email.
+### Ajouter ou retirer un vin
+1. Dans `index.html`, tableau `WINES` (id, nom, prix carton, prix bouteille ou `null`).
+2. Dans `Code.gs`, tableau `WINE_COLUMNS` (même id + `:carton` / `:bouteille`).
+3. Redéployer le script (voir ci-dessus).
